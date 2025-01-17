@@ -1,0 +1,50 @@
+@use "./utilities/global" as *;
+
+@include reset;
+
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("../assets/fonts/SpaceGrotesk-VariableFont_wght.ttf");
+  font-weight: 500 700;
+}
+
+@supports not (font-variation-settings: normal) {
+  @font-face {
+    font-family: "Space Grotesk";
+    src: url("../assets/fonts/static/SpaceGrotesk-Medium.ttf");
+    font-weight: 500;
+  }
+
+  @font-face {
+    font-family: "Space Grotesk";
+    src: url("../assets/fonts/static/SpaceGrotesk-Bold.ttf");
+    font-weight: 700;
+  }
+}
+
+body {
+  background-color: color(chinese-black);
+  color: color(light-silver);
+  font-family: "Space Grotesk";
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+//lowering specificity
+@layer links {
+  a {
+    &:any-link {
+      color: color(white);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    &:hover {
+      color: color(eucalyptus);
+    }
+  }
+}

@@ -1,0 +1,70 @@
+@use "./utilities/global" as *;
+
+.project_wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.image_wrapper {
+  position: relative;
+  margin-bottom: rem(20px);
+  font-size: 0;
+}
+
+.overlay {
+  display: none;
+  @media (min-width: $bp2) {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: rem(48px);
+    background-color: hsla(0, 0%, 0%, 0.75);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+    &:hover,
+    &:focus-within {
+      opacity: 1;
+    }
+  }
+}
+
+.title {
+  text-transform: uppercase;
+  @include setFont(rem(24px), 32px, 700);
+  color: color(white);
+  margin-bottom: em(7px, 24px);
+}
+
+.langs {
+  margin-bottom: rem(20px);
+  @media (min-width: $bp2) {
+    margin-bottom: 0;
+  }
+}
+
+.lang {
+  text-transform: uppercase;
+  @include setFont(rem(18px), 28px, 500);
+  &:first-of-type {
+    margin-right: rem(18px);
+  }
+  &:nth-of-type(2) {
+    margin-right: rem(20px);
+  }
+}
+
+.view {
+  & > a:first-of-type {
+    margin-right: rem(30px);
+  }
+  @media (min-width: $bp1) {
+    margin-top: auto;
+  }
+  @media (min-width: $bp2) {
+    display: none;
+  }
+}
