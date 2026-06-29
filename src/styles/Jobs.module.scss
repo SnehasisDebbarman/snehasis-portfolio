@@ -1,0 +1,41 @@
+@use "./utilities/global" as *;
+
+.jobs {
+  padding: rem(100px) rem(32px);
+  border-top: 1px solid color(border);
+
+  @media (min-width: $bp1) {
+    padding: rem(120px) rem(60px);
+  }
+  @media (min-width: $w-desktop) {
+    padding: rem(140px) rem(100px);
+  }
+}
+
+.jobs_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: rem(48px);
+}
+
+.label {
+  font-size: rem(11px);
+  font-weight: 500;
+  letter-spacing: 4px;
+  color: color(amber);
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.count {
+  font-size: rem(11px);
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: color(text-muted);
+  text-transform: uppercase;
+}
+
+.jobs_list {
+  border-top: 1px solid color(border);
+}

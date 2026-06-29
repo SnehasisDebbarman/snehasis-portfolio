@@ -1,24 +1,21 @@
 import scss from "../styles/Header.module.scss";
-
-import LogoSocialMedia from "./LogoSocialMedia";
-
-import heroImgMobile from "../assets/images/image-profile-mobile.jpeg";
-import heroImgTablet from "../assets/images/image-profile-desktop.jpeg";
-import heroImgDesktop from "../assets/images/image-profile-desktop.jpeg";
+import { Link as ScrollLink } from "react-scroll";
 
 export default function Header() {
   return (
     <header className={scss.header}>
-      <LogoSocialMedia />
-      <picture className={scss.hero_picture}>
-        <source srcSet={heroImgDesktop} media="(min-width: 1440px)" />
-        <source srcSet={heroImgTablet} media="(min-width: 650px)" />
-        <img
-          src={heroImgMobile}
-          alt="Adam Keyes headshot"
-          className={scss.hero_img}
-        />
-      </picture>
+      <div className={scss.logo_area}>
+        <ScrollLink to="about" smooth={true} duration={500} style={{ cursor: "none" }} className={scss.logo}>
+          S. DEBBARMAN
+        </ScrollLink>
+      </div>
+      <nav className={scss.navigation}>
+        <ScrollLink to="about" smooth={true} duration={500} style={{ cursor: "none" }} className={scss.nav_link}>ABOUT</ScrollLink>
+        <ScrollLink to="skills" smooth={true} duration={500} style={{ cursor: "none" }} className={scss.nav_link}>STACK</ScrollLink>
+        <ScrollLink to="projects" smooth={true} duration={500} style={{ cursor: "none" }} className={scss.nav_link}>PROJECTS</ScrollLink>
+        <ScrollLink to="experience" smooth={true} duration={500} style={{ cursor: "none" }} className={scss.nav_link}>EXPERIENCE</ScrollLink>
+        <ScrollLink to="contact" smooth={true} duration={500} style={{ cursor: "none" }} className={scss.nav_link}>CONTACT</ScrollLink>
+      </nav>
     </header>
   );
 }

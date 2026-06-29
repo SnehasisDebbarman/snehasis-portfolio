@@ -1,0 +1,81 @@
+@use "./utilities/global" as *;
+
+.statusBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 95;
+  height: rem(44px);
+  padding: 0 rem(24px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(hsl(14, 8%, 9%), 0.85);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid color(border);
+  font-family: var(--font-mono);
+  font-size: rem(11px);
+  letter-spacing: 1.5px;
+  color: color(text-muted);
+  pointer-events: none; // Let mouse events pass through to elements below
+
+  @media (min-width: $bp1) {
+    padding: 0 rem(48px);
+  }
+}
+
+// Enable pointer-events for specific interactive sub-elements if any are added in the future
+.left, .center, .right {
+  display: flex;
+  align-items: center;
+  gap: rem(12px);
+}
+
+.city {
+  color: color(text-muted);
+  opacity: 0.6;
+  position: relative;
+  
+  &::after {
+    content: "";
+    display: inline-block;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background-color: color(text-muted);
+    margin-left: rem(10px);
+    vertical-align: middle;
+  }
+}
+
+.time {
+  color: color(text);
+}
+
+.timerIcon {
+  color: color(amber);
+  font-size: rem(13px);
+  animation: rotateTimer 10s linear infinite;
+}
+
+@keyframes rotateTimer {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.timer {
+  color: color(text);
+}
+
+.right {
+  gap: rem(24px);
+}
+
+.coordinate {
+  color: color(text);
+  
+  &:first-child {
+    color: color(text-muted);
+  }
+}

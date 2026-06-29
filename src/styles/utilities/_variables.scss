@@ -8,10 +8,15 @@ $bp1: 650px;
 $bp2: 1200px;
 
 $colors: (
-  chinese-black: hsl(0, 0%, 8%),
-  eucalyptus: hsl(153, 71%, 59%),
-  raisin-black: hsl(0, 0%, 14%),
-  light-silver: hsl(0, 0%, 85%),
-  white: hsl(0, 0%, 100%),
-  bittersweet: hsl(7, 100%, 68%),
+  bg:           hsl(14, 8%, 9%),
+  bg-2:         hsl(14, 7%, 12%),
+  bg-3:         hsl(14, 6%, 16%),
+  text:         hsl(38, 25%, 94%),
+  text-muted:   hsl(30, 10%, 52%),
+  amber:        hsl(40, 70%, 67%),
+  amber-dim:    hsla(40, 70%, 67%, 0.12),
+  amber-glow:   hsla(40, 70%, 67%, 0.05),
+  border:       hsla(38, 20%, 60%, 0.08),
+  border-warm:  hsla(38, 20%, 60%, 0.18),
+  white:        hsl(0, 0%, 100%),
 );

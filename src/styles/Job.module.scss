@@ -1,0 +1,115 @@
+@use "./utilities/global" as *;
+
+.job_card {
+  padding: rem(48px) 0;
+  border-bottom: 1px solid color(border);
+  background: transparent;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: rem(20px);
+  transition: background 0.3s ease;
+  position: relative;
+
+  @media (min-width: $bp1) {
+    grid-template-columns: rem(240px) 1fr;
+    gap: rem(48px);
+  }
+
+  &:hover {
+    background: rgba(color(amber-glow), 0.3);
+
+    .company {
+      color: color(amber);
+    }
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.left_col {
+  display: flex;
+  flex-direction: column;
+  gap: rem(6px);
+  text-align: left;
+}
+
+.duration {
+  font-family: var(--font-mono);
+  font-size: rem(11px);
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  color: color(text);
+  text-transform: uppercase;
+}
+
+.location {
+  font-family: var(--font-body);
+  font-size: rem(13px);
+  color: color(text-muted);
+}
+
+.right_col {
+  display: flex;
+  flex-direction: column;
+  gap: rem(20px);
+  text-align: left;
+}
+
+.job_header {
+  display: flex;
+  flex-direction: column;
+  gap: rem(4px);
+}
+
+.company {
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 2.4vw, 2.4rem);
+  font-weight: 400;
+  color: color(text);
+  margin: 0;
+  line-height: 1.1;
+  transition: color 0.3s ease;
+}
+
+.role {
+  font-family: var(--font-body);
+  font-size: rem(11px);
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: color(amber);
+  margin: 0;
+}
+
+.achievements {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: rem(10px);
+}
+
+.achievement_item {
+  display: flex;
+  gap: rem(12px);
+  align-items: flex-start;
+}
+
+.bullet {
+  color: color(amber);
+  flex-shrink: 0;
+  opacity: 0.6;
+  font-size: rem(14px);
+  line-height: 1.6;
+}
+
+.achievement_text {
+  font-family: var(--font-body);
+  font-size: rem(14px);
+  line-height: 1.6;
+  color: color(text-muted);
+  margin: 0;
+}

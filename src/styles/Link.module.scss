@@ -1,23 +1,40 @@
 @use "./utilities/global" as *;
 
 .link {
-  display: inline-block;
-  @include setFont(rem(16px), 26px, 700);
+  display: inline-flex;
+  align-items: center;
+  gap: rem(10px);
+  font-family: var(--font-body);
+  @include setFont(rem(12px), 1em, 500);
   text-transform: uppercase;
-  letter-spacing: 2.28571px;
-  height: rem(36px);
-  border-bottom: 2px solid color(eucalyptus);
-  cursor: pointer;
-  color: transparent;
-  background: {
-    color: color(white);
-    image: linear-gradient(to right, color(eucalyptus), color(eucalyptus));
-    clip: text;
-    repeat: no-repeat;
-    size: 0% 100%;
+  letter-spacing: 2.5px;
+  padding: rem(14px) rem(32px);
+  border-radius: 0;
+  cursor: none;
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+  color: color(bg) !important;
+  background: color(amber);
+  border: none;
+  transition: color 0.3s ease;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: color(text);
+    z-index: -1;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.45s var(--ease-out-expo);
   }
-  transition: background-size 0.2s linear;
+
   &:hover {
-    background-size: 100% 100%;
+    color: color(bg) !important;
+    &::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
   }
 }

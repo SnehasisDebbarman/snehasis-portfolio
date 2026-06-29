@@ -1,27 +1,27 @@
-import Link from "./UI/Link";
 import scss from "../styles/Project.module.scss";
+import { FiArrowUpRight } from "react-icons/fi";
+import { FaGithub } from "react-icons/fa";
 
-function Project({ nr, title, langs,code, link }) {
+function Project({ nr, title, description, langs, code, link, onMouseEnter, onMouseLeave }) {
   return (
-    <div className={scss.project_wrapper}>
-      <div>
-        <div className={scss.image_wrapper}>
-          <div className={scss.overlay}>
-            <Link href={link}>View project</Link>
-            <Link href={code}>View code</Link>
-          </div>
-          <picture>
-            <source
-              srcSet={require(`../assets/images/thumbnail-project-${nr}-large.jpeg`)}
-              media="(min-width: 1440px)"
-            />
-            <img
-              srcSet={require(`../assets/images/thumbnail-project-${nr}-large.jpeg`)}
-              alt={title + " project thumbnail"}
-            />
-          </picture>
+    <div
+      className={scss.project_wrapper}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
+      <div className={scss.left_section}>
+        <span className={scss.number}>{String(nr).padStart(2, "0")}</span>
+        <div className={scss.title_group}>
+          <h3 className={scss.title}>
+            <a href={link} target="_blank" rel="noreferrer" className={scss.title_link}>
+              {title}
+            </a>
+          </h3>
+          <p className={scss.description}>{description}</p>
         </div>
-        <h3 className={scss.title}>{title}</h3>
+      </div>
+
+      <div className={scss.right_section}>
         <div className={scss.langs}>
           {langs.split(" ").map((lang, i) => (
             <span className={scss.lang} key={i}>
@@ -29,10 +29,15 @@ function Project({ nr, title, langs,code, link }) {
             </span>
           ))}
         </div>
-      </div>
-      <div className={scss.view}>
-        <Link href={link} >View project </Link>
-        <Link href={code}>View code</Link>
+
+        <div className={scss.actions}>
+          <a href={link} target="_blank" rel="noreferrer" className={scss.action_link}>
+            LIVE <FiArrowUpRight className={scss.arrow} />
+          </a>
+          <a href={code} target="_blank" rel="noreferrer" className={scss.action_link}>
+            CODE <FaGithub className={scss.github} />
+          </a>
+        </div>
       </div>
     </div>
   );

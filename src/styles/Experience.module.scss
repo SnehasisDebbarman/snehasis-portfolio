@@ -1,77 +1,98 @@
 @use "./utilities/global" as *;
 
 .experience {
-  border-top: 1px solid color(white);
-  border-bottom: 1px solid color(white);
-  padding-block: rem(40px);
-  margin-inline: lerp_max($w-mobile, rem(16px), $bp1, rem(30px));
-  margin-bottom: rem(80px);
-  display: flex;
-  flex-direction: column;
-  gap: rem(24px);
-  align-items: center;
-  text-align: center;
+  padding: rem(100px) rem(32px);
   position: relative;
+  border-bottom: 1px solid color(border);
 
   @media (min-width: $bp1) {
-    margin-inline: lerp_clamp($w-tablet, rem(30px), $w-desktop, rem(165px));
-    margin-bottom: rem(100px);
-    padding-top: rem(50px);
-    padding-bottom: 0;
-    padding-inline: rem(2px) rem(9px);
-    border-bottom: none;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    text-align: left;
-    row-gap: rem(52px);
-    column-gap: rem(7px);
+    padding: rem(120px) rem(60px);
   }
+  @media (min-width: $w-desktop) {
+    padding: rem(140px) rem(100px);
+  }
+}
 
-  @media (min-width: $bp2) {
-    margin-bottom: rem(140px);
-    padding-top: rem(72px);
-    padding-inline: rem(5px);
+.experience::before {
+  content: "Stack & Skills";
+  display: block;
+  font-size: rem(11px);
+  font-weight: 500;
+  letter-spacing: 4px;
+  color: color(amber);
+  text-transform: uppercase;
+  opacity: 0.8;
+  margin-bottom: rem(60px);
+  text-align: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: rem(48px) rem(24px);
+  max-width: rem(1200px);
+  margin: 0 auto;
+
+  @media (min-width: $bp1) {
     grid-template-columns: repeat(3, 1fr);
-    row-gap: rem(58px);
-    column-gap: rem(30px);
-    & > div:nth-child(3n) {
-      padding-left: rem(5px);
-    }
+    gap: rem(64px) rem(32px);
   }
+  @media (min-width: $bp2) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: rem(72px) rem(48px);
+  }
+}
 
-  &::after {
-    content: url("../assets/images/pattern-rings.svg");
-    position: absolute;
-    bottom: -71px;
-    right: -358px;
-    @media (min-width: $bp1) {
-      right: -362px;
-      bottom: -65px;
-    }
-    @media (min-width: $bp2) {
-      right: -404px;
-      bottom: -55px;
-    }
-  }
+.skill_cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.3s var(--ease-out-expo);
 
-  h1 {
-    @include setFont(rem(32px), 40px, 700);
-    letter-spacing: -1px;
-    color: color(white);
-    margin-bottom: em(1px, 32px);
-    @media (min-width: $bp1) {
-      font-size: lerp_min($bp1, rem(32px), $w-tablet, rem(48px));
-      line-height: lerp_min($bp1, 40px, $w-tablet, 56px);
-      letter-spacing: lerp_min($bp1, -1px, $w-tablet, -1.5px);
-      margin-bottom: lerp_min($bp1, rem(1px), $w-tablet, rem(14px));
-    }
-  }
+  &:hover {
+    transform: translateY(-4px);
 
-  p {
-    @include setFont(rem(16px), 26px, 500);
-    @media (min-width: $bp1) {
-      font-size: lerp_min($bp1, rem(16px), $w-tablet, rem(18px));
-      line-height: lerp_min($bp1, 26px, $w-tablet, 28px);
+    .icon_container {
+      filter: drop-shadow(0 0 12px var(--amber));
+      opacity: 1;
+    }
+
+    .skill_label {
+      color: color(amber);
     }
   }
+}
+
+.icon_container {
+  height: rem(56px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: rem(16px);
+  transition: all 0.3s ease;
+  opacity: 0.85;
+
+  svg, img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+
+.skill_label {
+  font-family: var(--font-body);
+  font-size: rem(14px);
+  font-weight: 500;
+  color: color(text);
+  margin-bottom: rem(4px);
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.skill_detail {
+  font-family: var(--font-mono);
+  font-size: rem(11px);
+  color: color(text-muted);
+  letter-spacing: 0.5px;
+  opacity: 0.85;
 }
