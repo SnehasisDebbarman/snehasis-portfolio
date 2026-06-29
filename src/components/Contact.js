@@ -6,14 +6,14 @@ import scss from "../styles/Contact.module.scss";
 import { useState } from "react";
 
 export default function Contact() {
-  const [nameState, nameProps, nameFns] = useValidateInput();
-  const [emailState, emailProps, emailFns] = useValidateInput({
+  const [nameState, nameProps] = useValidateInput();
+  const [emailState, emailProps] = useValidateInput({
     type: "email",
   });
-  const [messageState, messageProps, messageFns] = useValidateInput();
-  const formIsValid =
-    nameState.isValid && emailState.isValid && messageState.isValid;
-  const [formWasSubmitted, setFormWasSubmitted] = useState({
+  const [messageState, messageProps] = useValidateInput();
+  // const formIsValid =
+  //   nameState.isValid && emailState.isValid && messageState.isValid;
+  const [formWasSubmitted] = useState({
     submitted: false,
     error: false,
   });

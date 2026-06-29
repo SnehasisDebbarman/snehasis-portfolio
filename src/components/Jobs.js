@@ -5,6 +5,17 @@ import scss from "../styles/Projects.module.scss";
 export default function Jobs() {
   const jobs = [
     {
+      company: "Publicis Sapient, Bengaluru, India",
+      role: "Senior Experience Engineer",
+      duration: "Apr 2025 – Present",
+      achievements: [
+        "Working on Carnival PLC project as a Frontend Developer.",
+        "Built scalable interfaces using Next.js, Tailwind CSS, and Storybook.",
+        "Contributed to Microfrontend architecture, enabling modular deployments.",
+        "Integrated with Adobe Experience Manager (AEM) for dynamic content rendering.",
+      ],
+    },
+    {
       company: "Unovators Tech Private Limited",
       role: "Associate Software Developer",
       duration: "2023-Present",
