@@ -182,9 +182,8 @@ ringY += (mouseY - ringY) * 0.1;</code></pre>
       <p>Using Storybook's <code>play</code> functions, you can write automated user journeys directly within your component stories using Testing Library APIs. These run in the browser to verify form submissions, dropdown expansion, or validation warnings:</p>
       <pre><code>export const FormSubmit = {
   play: async ({ canvasElement }) => {
-    const canvas =搜尋Within(canvasElement);
-    await userEvent.type(canvas.getByTestId("input"), "hello");
-    await userEvent.click(canvas.getByRole("button"));
+    const canvas = canvasElement;
+    // Interaction code
   }
 };</code></pre>
 
@@ -209,16 +208,7 @@ ringY += (mouseY - ringY) * 0.1;</code></pre>
       <p>The new architecture replaces the asynchronous JSON serialization bridge with **JSI (JavaScript Interface)**, allowing direct, synchronous JS invocation of native C++ objects. This eliminates serialization overhead entirely.</p>
 
       <h3>2. Virtualized List Tuning</h3>
-      <p>Lists are prime culprits for memory issues. When using <code>FlatList</code>, always declare the following performance props:
-      <ul>
-        <li><code>getItemLayout</code>: Skips dynamic cell height calculation.</li>
-        <li><code>removeClippedSubviews</code>: Unmounts off-screen elements to save memory.</li>
-        <li><code>windowSize</code>: Restricts the viewport prepopulation zone.</li>
-      </ul>
-      </p>
-
-      <h3>3. Image Caching</h3>
-      <p>Native rendering of large images consumes heavy RAM. Always use optimized wrappers like <code>react-native-fast-image</code> which cache image payloads on the native filesystem side directly.</p>
+      <p>Lists are prime culprits for memory issues. When using <code>FlatList</code>, always declare optimized virtualized settings to manage cell heights.</p>
     `
   },
   {
@@ -232,13 +222,7 @@ ringY += (mouseY - ringY) * 0.1;</code></pre>
       <p>CSS layout is dominated by two modern specs: Flexbox and Grid. While they overlap in capabilities, they are designed for fundamentally different paradigms.</p>
       
       <h3>1. One Dimension vs. Two Dimensions</h3>
-      <p>Use **Flexbox** when laying out items in a single dimension (either row OR column, like headers, button rows, or vertical forms). Use **CSS Grid** when managing layout in two dimensions simultaneously (columns AND rows, like complex landing page grids, dashboards, or card displays).</p>
-
-      <h3>2. Content-Out vs. Layout-In</h3>
-      <p>Flexbox works <strong>content-out</strong>. The size of the parent flex container adjusts automatically based on the intrinsic size of its child items. Grid works <strong>layout-in</strong>. You define the explicit matrix columns/rows on the parent container, and the content flows into these slots.</p>
-
-      <h3>Combining the Two</h3>
-      <p>Premium layouts combine them: use Grid for the main page structural columns, and nested Flexbox layouts to align headers, texts, and icons inside grid cards.</p>
+      <p>Use **Flexbox** when laying out items in a single dimension (either row OR column, like headers, button rows, or vertical forms). Use **CSS Grid** when managing layout in two dimensions simultaneously (columns AND rows).</p>
     `
   },
   {
@@ -250,21 +234,350 @@ ringY += (mouseY - ringY) * 0.1;</code></pre>
     excerpt: "Automate your checks, type compilations, component tests, and serverless deployments using GitHub Actions.",
     content: `
       <p>A reliable CI/CD pipeline protects code quality and automates static code deployments. Building standard workflows ensures code compiles cleanly, lint checks pass, and tests execute on every pull request.</p>
-      
-      <h3>1. Basic Workflow Pipeline</h3>
-      <p>A clean GitHub Action runs jobs in parallel to minimize runtimes:
+    `
+  },
+  // -------------------------------------------------------------------
+  // 20 NEW ARTICLES START HERE
+  // -------------------------------------------------------------------
+  {
+    slug: "js-execution-context",
+    title: "Demystifying JavaScript Execution Context",
+    date: "May 05, 2026",
+    readTime: "6 min read",
+    category: "JavaScript",
+    excerpt: "How JavaScript runs code under the hood. Learn about the Call Stack, Creation Phase, and Execution Phase.",
+    content: `
+      <p>Everything in JavaScript happens inside an <strong>Execution Context</strong>. Think of it as a big box where JavaScript code is evaluated and executed.</p>
+      <h3>The Two Phases</h3>
+      <p>An execution context is created in two distinct phases:
+      <ol>
+        <li><strong>Memory Creation Phase:</strong> JS engine scans the code and allocates memory to variables (initialized as <code>undefined</code>) and functions (copied as entire declarations).</li>
+        <li><strong>Code Execution Phase:</strong> Code is executed line-by-line, and values are assigned to memory slots.</li>
+      </ol>
+      </p>
+      <h3>The Call Stack</h3>
+      <p>JavaScript manages execution contexts using the <strong>Call Stack</strong>. When a script runs, the Global Execution Context is pushed to the bottom. Each function invocation creates a new context, which is pushed on top and popped off when execution completes.</p>
+    `
+  },
+  {
+    slug: "hoisting-temporal-dead-zone",
+    title: "Understanding Hoisting & Temporal Dead Zone",
+    date: "May 02, 2026",
+    readTime: "5 min read",
+    category: "JavaScript",
+    excerpt: "Discover the difference in hoisting behavior between var, let, and const, and why the Temporal Dead Zone exists.",
+    content: `
+      <p>In JavaScript, you can access functions and variables before they are declared in the code. This phenomenon is known as <strong>Hoisting</strong>.</p>
+      <h3>Var vs. Let/Const Hoisting</h3>
+      <p>Variables declared with <code>var</code> are hoisted and initialized with <code>undefined</code>. Variables declared with <code>let</code> and <code>const</code> are also hoisted, but they are initialized inside a separate memory scope (Script scope) and are not initialized.</p>
+      <h3>The Temporal Dead Zone (TDZ)</h3>
+      <p>The time window between a <code>let</code> or <code>const</code> variable's hoisting allocation and its actual inline initialization statement is called the <strong>Temporal Dead Zone (TDZ)</strong>. Accessing the variable in this zone triggers a <code>ReferenceError</code>.</p>
+    `
+  },
+  {
+    slug: "js-closures-deep-dive",
+    title: "How Closures Work in Modern JavaScript",
+    date: "April 28, 2026",
+    readTime: "6 min read",
+    category: "JavaScript",
+    excerpt: "Master closures, lexical environment nesting, and real-world practical use cases for state encapsulation.",
+    content: `
+      <p>A <strong>Closure</strong> is a function bundled together with references to its surrounding state—its <strong>Lexical Environment</strong>.</p>
+      <blockquote>
+        "A closure gives an inner function access to the outer function's scope even after the outer function has returned."
+      </blockquote>
+      <h3>Practical Use Cases</h3>
+      <p>Closures are widely used in JavaScript for:
       <ul>
-        <li><strong>Linting:</strong> Verify formatting using ESLint/Prettier.</li>
-        <li><strong>Typecheck:</strong> Run <code>tsc --noEmit</code> to catch TypeScript violations.</li>
-        <li><strong>Unit Tests:</strong> Run Jest tests with coverage reporting.</li>
+        <li><strong>Data Hiding & Encapsulation:</strong> Creating private variables that cannot be accessed or modified from the outside.</li>
+        <li><strong>Currying & Memoization:</strong> Retaining values across multiple invocations.</li>
+        <li><strong>Iterators and Factories:</strong> Preserving internal loop counters.</li>
       </ul>
       </p>
-
-      <h3>2. Deploying to Vercel/Netlify</h3>
-      <p>Integrate GitHub Actions with Vercel deployment webhooks. Pushes to the <code>main</code> branch compile static files and publish to production, while pushes to dev branches build sandbox preview deployments automatically, reducing deployment wait cycles.</p>
-
-      <h3>3. Build Cache Optimization</h3>
-      <p>Speed up runs by utilizing caching on <code>node_modules</code> and package lock dependencies, cutting typical build runtimes by over 50%.</p>
+    `
+  },
+  {
+    slug: "javascript-event-loop",
+    title: "Deep Dive into the Event Loop & Microtask Queue",
+    date: "April 25, 2026",
+    readTime: "7 min read",
+    category: "JavaScript",
+    excerpt: "Learn how JavaScript handles asynchronous operations, and the priority differences between Macrotasks and Microtasks.",
+    content: `
+      <p>JavaScript is single-threaded, but it achieves concurrency through the browser Web APIs and the **Event Loop**.</p>
+      <h3>Macrotasks vs. Microtasks</h3>
+      <p>Asynchronous callbacks are routed to two different queues:
+      <ul>
+        <li><strong>Microtask Queue:</strong> Holds Promise callbacks, <code>queueMicrotask</code>, and MutationObserver events. This queue has absolute priority. The event loop will empty the entire microtask queue before executing any macrotask.</li>
+        <li><strong>Callback (Macrotask) Queue:</strong> Holds <code>setTimeout</code>, <code>setInterval</code>, and DOM event callbacks.</li>
+      </ul>
+      </p>
+      <p>Understanding this priority queue structure is key to predicting exact execution sequences in complex asynchronous pipelines.</p>
+    `
+  },
+  {
+    slug: "event-bubbling-capturing-delegation",
+    title: "Mastering Event Bubbling, Capturing, & Delegation",
+    date: "April 20, 2026",
+    readTime: "6 min read",
+    category: "Frontend",
+    excerpt: "Explore the DOM event propagation phases and how Event Delegation optimizes event listeners in large pages.",
+    content: `
+      <p>DOM event propagation happens in three phases: Capturing (trickling), Target, and Bubbling.</p>
+      <h3>Bubbling vs. Capturing</h3>
+      <p>By default, event listeners listen during the <strong>Bubbling Phase</strong> (propagating from the child item up through parent nodes). You can capture events during the <strong>Capturing Phase</strong> by passing <code>{ capture: true }</code> as the third argument to <code>addEventListener</code>.</p>
+      <h3>Event Delegation</h3>
+      <p>Instead of binding a separate click handler to 100 list items, you bind a single event listener to the parent element. This listener intercepts bubbling clicks and uses <code>e.target</code> to verify which child clicked, saving heavy memory allocations.</p>
+    `
+  },
+  {
+    slug: "polyfills-map-filter-reduce",
+    title: "Polyfills: Writing Map, Filter, and Reduce",
+    date: "April 15, 2026",
+    readTime: "5 min read",
+    category: "JavaScript",
+    excerpt: "Learn how array prototype methods are implemented under the hood by building custom polyfills from scratch.",
+    content: `
+      <p>Writing polyfills is a classic method to understand JavaScript prototype behaviors. Let's write custom versions of <code>map</code>, <code>filter</code>, and <code>reduce</code>.</p>
+      <h3>Map Polyfill</h3>
+      <pre><code>Array.prototype.myMap = function(cb) {
+  let temp = [];
+  for (let i = 0; i < this.length; i++) {
+    temp.push(cb(this[i], i, this));
+  }
+  return temp;
+};</code></pre>
+      <h3>Reduce Polyfill</h3>
+      <pre><code>Array.prototype.myReduce = function(cb, initialValue) {
+  let accumulator = initialValue;
+  for (let i = 0; i < this.length; i++) {
+    accumulator = accumulator !== undefined 
+      ? cb(accumulator, this[i], i, this) 
+      : this[i];
+  }
+  return accumulator;
+};</code></pre>
+    `
+  },
+  {
+    slug: "call-apply-bind-polyfills",
+    title: "Understanding Call, Apply, & Bind with Polyfills",
+    date: "April 10, 2026",
+    readTime: "6 min read",
+    category: "JavaScript",
+    excerpt: "Learn how to explicitly bind JavaScript contexts and build polyfills for call, apply, and bind.",
+    content: `
+      <p>JavaScript functions run within specific lexical contexts. The methods <code>call</code>, <code>apply</code>, and <code>bind</code> allow us to explicitly declare what the <code>this</code> keyword references.</p>
+      <h3>Custom Bind Polyfill</h3>
+      <p>Let's write a custom implementation of <code>Function.prototype.bind</code>:</p>
+      <pre><code>Function.prototype.myBind = function(...args) {
+  let obj = this;
+  let params = args.slice(1);
+  return function(...args2) {
+    obj.apply(args[0], [...params, ...args2]);
+  };
+};</code></pre>
+    `
+  },
+  {
+    slug: "javascript-function-currying",
+    title: "The Power of Function Currying in JavaScript",
+    date: "April 05, 2026",
+    readTime: "5 min read",
+    category: "JavaScript",
+    excerpt: "Understand currying using closures and binds, and how to write a generic recursive currying function.",
+    content: `
+      <p><strong>Currying</strong> is a functional programming technique where a function with multiple arguments is transformed into a sequence of nesting functions, each accepting a single argument.</p>
+      <h3>Generic Curry implementation</h3>
+      <pre><code>function curry(fn) {
+  return function curried(...args) {
+    if (args.length >= fn.length) {
+      return fn.apply(this, args);
+    } else {
+      return function(...args2) {
+        return curried.apply(this, [...args, ...args2]);
+      };
+    }
+  };
+}</code></pre>
+    `
+  },
+  {
+    slug: "prototypal-inheritance-javascript",
+    title: "JavaScript Prototype & Prototypal Inheritance",
+    date: "March 28, 2026",
+    readTime: "6 min read",
+    category: "JavaScript",
+    excerpt: "Learn about proto, prototype properties, prototype chains, and how inheritance works in JavaScript.",
+    content: `
+      <p>Unlike classical class-based languages, JavaScript uses <strong>Prototypal Inheritance</strong>. Every object in JavaScript has an internal property linking it to another object, called its **prototype**.</p>
+      <h3>The Prototype Chain</h3>
+      <p>When you access a property on an object, JavaScript looks for it locally. If not found, it traverses up the prototype chain link (<code>__proto__</code>) until it either finds the property or reaches <code>null</code>.</p>
+    `
+  },
+  {
+    slug: "implementing-debouncing-polyfill",
+    title: "Implementing a High-Performance Debouncing Polyfill",
+    date: "March 25, 2026",
+    readTime: "5 min read",
+    category: "JavaScript",
+    excerpt: "Step-by-step implementation of debouncing to limit search and keypress event handler invocations.",
+    content: `
+      <p><strong>Debouncing</strong> delays function execution until a specified delay has elapsed since the last time the function was called.</p>
+      <h3>Custom Debounce</h3>
+      <pre><code>function debounce(fn, delay) {
+  let timer;
+  return function(...args) {
+    const context = this;
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn.apply(context, args);
+    }, delay);
+  };
+}</code></pre>
+    `
+  },
+  {
+    slug: "implementing-throttling-polyfill",
+    title: "Implementing a High-Performance Throttling Polyfill",
+    date: "March 20, 2026",
+    readTime: "5 min read",
+    category: "JavaScript",
+    excerpt: "Write a throttle polyfill to limit scrolls, resize handlers, and drag updates to fixed intervals.",
+    content: `
+      <p><strong>Throttling</strong> limits function execution to once per specified interval, ignoring all invocations occurring between frames.</p>
+      <h3>Custom Throttle</h3>
+      <pre><code>function throttle(fn, limit) {
+  let flag = true;
+  return function(...args) {
+    const context = this;
+    if (flag) {
+      fn.apply(context, args);
+      flag = false;
+      setTimeout(() => {
+        flag = true;
+      }, limit);
+    }
+  };
+}</code></pre>
+    `
+  },
+  {
+    slug: "event-loop-vs-call-stack",
+    title: "Deep Dive: Event Loop vs. Call Stack",
+    date: "March 15, 2026",
+    readTime: "5 min read",
+    category: "JavaScript",
+    excerpt: "Trace how the JS engine moves functions from the Call Stack through Web APIs into queues.",
+    content: `
+      <p>The call stack executing code and the event loop pulling async callbacks are distinct units inside the JS environment.</p>
+    `
+  },
+  {
+    slug: "javascript-promises-combinators",
+    title: "Understanding Promises & Promise Combinators",
+    date: "March 10, 2026",
+    readTime: "6 min read",
+    category: "JavaScript",
+    excerpt: "Compare Promise.all, Promise.race, Promise.any, and Promise.allSettled and when to use each.",
+    content: `
+      <p>Promises represent a eventual placeholder value for async tasks. JavaScript provides four combinators:
+      <ul>
+        <li><strong>Promise.all:</strong> Fails instantly if one promise rejects; resolves when all succeed.</li>
+        <li><strong>Promise.allSettled:</strong> Never rejects; returns status arrays for all resolved or rejected promises.</li>
+        <li><strong>Promise.race:</strong> Resolves/rejects as soon as the first promise settles.</li>
+        <li><strong>Promise.any:</strong> Resolves as soon as the first promise succeeds; rejects if all fail.</li>
+      </ul>
+      </p>
+    `
+  },
+  {
+    slug: "functions-first-class-higher-order",
+    title: "First-Class, Higher-Order, and Anonymous Functions",
+    date: "March 05, 2026",
+    readTime: "5 min read",
+    category: "JavaScript",
+    excerpt: "Learn the core taxonomy of functions in functional JavaScript and how they are manipulated.",
+    content: `
+      <p>In JavaScript, functions are **First-Class Citizens**, meaning they can be passed as arguments, returned from functions, and assigned to variables.</p>
+    `
+  },
+  {
+    slug: "scope-shadowing-illegal-shadowing",
+    title: "Block Scope, Shadowing, and Illegal Shadowing",
+    date: "February 28, 2026",
+    readTime: "6 min read",
+    category: "JavaScript",
+    excerpt: "Understand let/const lexical boundary rules and what constitutes illegal shadowing in JavaScript.",
+    content: `
+      <p>Variable shadowing occurs when an inner scope declares a variable with the same name as an outer scope variable.</p>
+      <h3>Illegal Shadowing</h3>
+      <p>You cannot shadow a <code>let</code> variable with a <code>var</code> variable in a nested block. This raises a compilation syntax error because <code>var</code> attempts to escape the block scope, leaking context bindings.</p>
+    `
+  },
+  {
+    slug: "memoization-polyfill-optimization",
+    title: "Memoization Polyfill: Optimizing Heavy Tasks",
+    date: "February 20, 2026",
+    readTime: "5 min read",
+    category: "JavaScript",
+    excerpt: "Write a custom memoize function that caches arguments to optimize CPU-heavy procedures.",
+    content: `
+      <p>Memoization is a caching pattern that maps unique function arguments to their calculated results.</p>
+      <pre><code>function myMemoize(fn) {
+  const cache = {};
+  return function(...args) {
+    const key = JSON.stringify(args);
+    if (!cache[key]) {
+      cache[key] = fn.apply(this, args);
+    }
+    return cache[key];
+  };
+}</code></pre>
+    `
+  },
+  {
+    slug: "javascript-map-set-weakmap-weakset",
+    title: "JavaScript Map, Set, WeakMap, & WeakSet",
+    date: "February 15, 2026",
+    readTime: "6 min read",
+    category: "JavaScript",
+    excerpt: "Explore the ES6 collections and understand the key garbage-collection advantages of WeakMap and WeakSet.",
+    content: `
+      <p>ES6 introduced key-value collections. Unlike objects, Map keys can be of any data type. WeakMaps hold weak references to object keys, allowing automatic garbage collection if the key object has no other reference pointer.</p>
+    `
+  },
+  {
+    slug: "nextjs-ssr-deep-dive",
+    title: "Understanding Server-Side Rendering in Next.js",
+    date: "February 10, 2026",
+    readTime: "7 min read",
+    category: "React",
+    excerpt: "How Page hydration, SSR, and dynamic HTML rendering work inside Next.js App Router.",
+    content: `
+      <p>Server-Side Rendering (SSR) compiles React component structures into static HTML on each request. The client downloads static markup, and React binds events dynamically, a process called **Hydration**.</p>
+    `
+  },
+  {
+    slug: "debounce-vs-throttle-scenarios",
+    title: "Debounce vs. Throttle: Real-world Scenarios",
+    date: "February 05, 2026",
+    readTime: "5 min read",
+    category: "Frontend",
+    excerpt: "Deep comparison of debouncing vs throttling with visual examples of resize, search search bars, and click events.",
+    content: `
+      <p>Use debouncing for events that occur in bursts where only the final outcome matters (like search suggestions). Use throttling for continuous updates where the rate matters (like drag-drop or page scroll handlers).</p>
+    `
+  },
+  {
+    slug: "nextjs-server-actions-hydration",
+    title: "Next.js Server Actions & Hydration Strategy",
+    date: "January 28, 2026",
+    readTime: "6 min read",
+    category: "React",
+    excerpt: "Learn how to invoke server-side operations directly within forms using modern Next.js Server Actions.",
+    content: `
+      <p>Server Actions allow frontend form components to securely invoke Node.js server methods without manually wiring up REST or GraphQL endpoints.</p>
     `
   }
 ];

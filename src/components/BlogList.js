@@ -1,8 +1,28 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { posts } from "../data/posts";
 import scss from "../styles/Blog.module.scss";
 
 export default function BlogList() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 6;
+
+  const totalPages = Math.ceil(posts.length / postsPerPage);
+  
+  // Calculate index boundaries
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    // Smooth scroll back to the top of the blog articles container
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
+
   return (
     <section className={scss.blog_section}>
       <header className={scss.blog_header}>
@@ -11,7 +31,7 @@ export default function BlogList() {
       </header>
 
       <div className={scss.posts_list}>
-        {posts.map((post) => (
+        {currentPosts.map((post) => (
           <div key={post.slug} className={scss.post_card}>
             <div className={scss.left_col}>
               <span className={scss.date}>{post.date}</span>
@@ -36,6 +56,44 @@ export default function BlogList() {
           </div>
         ))}
       </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className={scss.pagination}>
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={scss.page_btn}
+            aria-label="Previous page"
+          >
+            ← PREV
+          </button>
+          
+          <div className={scss.page_numbers}>
+            {Array.from({ length: totalPages }, (_, index) => {
+              const pageNum = index + 1;
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() => handlePageChange(pageNum)}
+                  className={`${scss.page_num_btn} ${currentPage === pageNum ? scss.active_page : ""}`}
+                >
+                  {String(pageNum).padStart(2, "0")}
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className={scss.page_btn}
+            aria-label="Next page"
+          >
+            NEXT →
+          </button>
+        </div>
+      )}
     </section>
   );
 }
