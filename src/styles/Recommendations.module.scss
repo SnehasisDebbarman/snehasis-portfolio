@@ -1,0 +1,151 @@
+@use "./utilities/global" as *;
+
+.section {
+  padding: rem(100px) rem(32px);
+  border-top: 1px solid color(border);
+  position: relative;
+
+  @media (min-width: $bp1) {
+    padding: rem(120px) rem(60px);
+  }
+  @media (min-width: $w-desktop) {
+    padding: rem(140px) rem(100px);
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: rem(48px);
+
+  h2 {
+    font-family: var(--font-body);
+    font-size: rem(11px);
+    font-weight: 500;
+    letter-spacing: 4px;
+    color: color(amber);
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin: 0;
+  }
+}
+
+.subtitle {
+  font-family: var(--font-mono);
+  font-size: rem(11px);
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: color(text-muted);
+  text-transform: uppercase;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: rem(32px);
+
+  @media (min-width: $bp1) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.card {
+  border: 1px solid color(border);
+  padding: rem(48px) rem(36px);
+  background: transparent;
+  position: relative;
+  transition: border-color 0.3s ease, background 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: left;
+
+  &:hover {
+    border-color: color(border-warm);
+    background: rgba(color(amber-glow), 0.2);
+  }
+}
+
+.quote_icon {
+  font-family: var(--font-serif);
+  font-size: rem(80px);
+  line-height: 1;
+  color: color(amber);
+  opacity: 0.08;
+  position: absolute;
+  top: rem(20px);
+  left: rem(24px);
+  pointer-events: none;
+}
+
+.quote_text {
+  font-family: var(--font-serif);
+  font-size: clamp(1.3rem, 1.8vw, 1.7rem);
+  line-height: 1.7;
+  color: color(text);
+  margin: 0;
+  font-style: italic;
+  position: relative;
+  z-index: 2;
+}
+
+.divider {
+  height: 1px;
+  background: color(border);
+  margin: rem(24px) 0;
+}
+
+.author_info {
+  display: flex;
+  align-items: center;
+  gap: rem(16px);
+}
+
+.avatar {
+  width: rem(42px);
+  height: rem(42px);
+  border-radius: 50%;
+  border: 1px solid color(border-warm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: rem(11px);
+  color: color(amber);
+  background: rgba(255, 255, 255, 0.02);
+  flex-shrink: 0;
+}
+
+.author_meta {
+  display: flex;
+  flex-direction: column;
+  gap: rem(2px);
+}
+
+.author_name {
+  font-family: var(--font-body);
+  font-size: rem(14px);
+  font-weight: 600;
+  color: color(text);
+  margin: 0;
+}
+
+.author_headline {
+  font-family: var(--font-body);
+  font-size: rem(11px);
+  line-height: 1.4;
+  color: color(text-muted);
+  margin: 0;
+  max-width: 95%;
+}
+
+.relation_date {
+  font-family: var(--font-mono);
+  font-size: rem(9px);
+  letter-spacing: 0.5px;
+  color: color(text-muted);
+  opacity: 0.7;
+  margin-top: rem(4px);
+  display: block;
+}
