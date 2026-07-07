@@ -17,7 +17,7 @@ export default function Jobs() {
     },
     {
       company: "Unovators Tech",
-      location: "Private Limited",
+      location: "Kolkata, India",
       role: "Associate Software Developer",
       duration: "2023 – 2025",
       achievements: [
@@ -39,7 +39,7 @@ export default function Jobs() {
     },
     {
       company: "ITC Infotech",
-      location: "India Pvt. Ltd.",
+      location: "Kolkata, India",
       role: "Associate IT Consultant",
       duration: "2021 – 2022",
       achievements: [

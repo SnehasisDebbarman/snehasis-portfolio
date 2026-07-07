@@ -31,6 +31,7 @@
     color: color(text);
     text-transform: uppercase;
     transition: color 0.3s ease;
+    white-space: nowrap;
 
     &:hover {
       color: color(amber);
@@ -38,9 +39,51 @@
   }
 }
 
+.menu_toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  color: color(text-muted);
+  z-index: 110;
+  padding: rem(6px);
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: color(text);
+  }
+
+  @media (min-width: $bp1) {
+    display: none;
+  }
+}
+
 .navigation {
   display: flex;
   gap: rem(20px);
+
+  @media (max-width: #{$bp1 - 1px}) {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: rem(280px);
+    height: 100vh;
+    background: rgba(color(bg-2), 0.98);
+    backdrop-filter: blur(16px);
+    border-left: 1px solid color(border-warm);
+    flex-direction: column;
+    padding: rem(100px) rem(40px);
+    gap: rem(24px);
+    z-index: 105;
+    transform: translateX(100%);
+    transition: transform 0.4s var(--ease-out-expo);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+
+    &.menu_open {
+      transform: translateX(0);
+    }
+  }
 
   @media (min-width: $bp1) {
     gap: rem(36px);

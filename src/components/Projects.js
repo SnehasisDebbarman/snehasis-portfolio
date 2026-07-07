@@ -4,7 +4,7 @@ import scss from "../styles/Projects.module.scss";
 
 // Import images directly for the floating preview
 import img1 from "../assets/images/thumbnail-project-1-large.jpeg";
-import img2 from "../assets/images/thumbnail-project-2-large.jpeg";
+import img2 from "../assets/images/thumbnail-project-2-large.png";
 import img3 from "../assets/images/thumbnail-project-3-large.jpeg";
 import img4 from "../assets/images/thumbnail-project-4-large.jpeg";
 
@@ -23,11 +23,11 @@ export default function Projects() {
       link: "https://timberly-74hw.vercel.app/"
     },
     {
-      title: "Rimes — Editorial Template",
-      description: "A minimalist, typography-focused layout designed for elegant reading experiences.",
-      langs: "HTML CSS React",
-      code: "https://github.com/SnehasisDebbarman/rimes",
-      link: "https://rimes-yr38.vercel.app/"
+      title: "Canvas Board — Collaborative Canvas",
+      description: "A real-time, offline-first collaborative workspace with sub-16ms zoom/pan performance.",
+      langs: "React TypeScript Next.js Yjs",
+      code: "https://github.com/SnehasisDebbarman/canvas-board",
+      link: "https://canvas-board-beige.vercel.app/"
     },
     {
       title: "Inna Construction Portal",
