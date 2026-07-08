@@ -90,6 +90,7 @@ const editorOptions = {
   hideCursorInOverviewRuler: true,
   renderLineHighlight: "gutter" as const,
   smoothScrolling: true,
+  accessibilitySupport: "off" as const,
 };
 
 export default function MonacoEditor() {

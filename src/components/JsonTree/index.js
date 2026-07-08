@@ -47,8 +47,6 @@ export default function JsonTree() {
     setContents({ contents: JSON_TEMPLATE, hasChanges: false });
   }, [setContents]);
 
-  // Removed auto-fullscreen on mobile so users can use the editor on mobile too
-
   const contentHeight = `calc(100vh - ${NAVBAR_HEIGHT}px)`;
 
   return (
@@ -62,6 +60,8 @@ export default function JsonTree() {
         fontFamily: "'Space Grotesk', sans-serif",
         position: "relative",
         height: "100vh",
+        display: "flex",
+        flexDirection: "column",
         overflow: "hidden",
         background: "var(--jt-bg)",
       }}
@@ -70,21 +70,22 @@ export default function JsonTree() {
       <main
         style={{
           display: "flex",
-          height: contentHeight,
+          flex: 1,
+          minHeight: 0,
           width: "100%",
-          flexDirection: isScreenLessThan ? "column" : "row",
         }}
       >
         <Allotment
-          style={{ position: "relative", height: contentHeight }}
+          key={isScreenLessThan ? "mobile" : "desktop"}
+          style={{ position: "relative", height: "100%" }}
           proportionalLayout={false}
           vertical={isScreenLessThan}
         >
           <Allotment.Pane
             style={{ height: "100%", background: "var(--jt-bg2)" }}
             preferredSize={isScreenLessThan ? "40%" : 450}
-            minSize={fullscreen ? 0 : (isScreenLessThan ? 100 : 450)}
-            maxSize={isScreenLessThan ? Infinity : 700}
+            minSize={fullscreen ? 0 : (isScreenLessThan ? 150 : 250)}
+            maxSize={Infinity}
             visible={!fullscreen}
           >
             <MonacoEditor />

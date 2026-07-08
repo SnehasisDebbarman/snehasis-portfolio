@@ -309,6 +309,20 @@ html:not(.dark) {
   transition: background 0.2s ease !important;
 }
 
+/* React Allotment uses inline styles for cursor, but our global * rule overrides it unless we restore it */
+.json-tree-root .sash-horizontal {
+  cursor: col-resize !important;
+}
+
+.json-tree-root .sash-vertical {
+  cursor: row-resize !important;
+}
+
+/* For robustness, if they don't have these classes, we can exempt the sash element from the auto cursor rule by doing this: */
+.json-tree-root .sash, .json-tree-root .sash * {
+  cursor: inherit !important;
+}
+
 .sash:hover,
 .sash.active {
   background: var(--jt-amber) !important;
