@@ -1,0 +1,407 @@
+/* ============================================================
+   JsonTree – Portfolio-Matched Color Scheme
+   Dark mode:  html.dark (default) → warm dark + amber
+   Light mode: html (no .dark)     → warm parchment + amber
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Share+Tech+Mono&display=swap');
+
+/* ============================================================
+   CSS TOKENS — DARK MODE (default, html.dark)
+   ============================================================ */
+html.dark {
+  --jt-bg:           hsl(14, 8%, 9%);
+  --jt-bg2:          hsl(14, 7%, 12%);
+  --jt-bg3:          hsl(14, 6%, 16%);
+  --jt-text:         hsl(38, 25%, 94%);
+  --jt-text-muted:   hsl(30, 10%, 52%);
+  --jt-amber:        hsl(40, 70%, 67%);
+  --jt-amber-dim:    hsla(40, 70%, 67%, 0.12);
+  --jt-amber-glow:   hsla(40, 70%, 67%, 0.08);
+  --jt-border:       hsla(38, 20%, 60%, 0.08);
+  --jt-border-warm:  hsla(38, 20%, 60%, 0.18);
+
+  /* Node syntax colors - dark */
+  --jt-node-array:   hsl(40, 70%, 67%);
+  --jt-node-object:  hsl(36, 65%, 72%);
+  --jt-node-key:     hsl(38, 55%, 63%);
+  --jt-node-default: hsl(38, 25%, 88%);
+  --jt-node-number:  #84c0a8;
+  --jt-node-bool-t:  #9fc59a;
+  --jt-node-bool-f:  #c28060;
+  --jt-node-null:    hsl(30, 10%, 52%);
+  --jt-node-string:  hsl(38, 45%, 78%);
+  --jt-node-card-bg: hsl(14, 7%, 12%);
+  --jt-node-border:  hsla(38, 20%, 60%, 0.13);
+  --jt-edge-color:   hsla(38, 20%, 60%, 0.22);
+  --jt-dot-grid:     hsla(38, 20%, 60%, 0.06);
+
+  /* Editor bg */
+  --jt-editor-bg:    hsl(14, 8%, 10%);
+}
+
+/* ============================================================
+   CSS TOKENS — LIGHT MODE (html without .dark class)
+   ============================================================ */
+html:not(.dark) {
+  --jt-bg:           hsl(38, 30%, 96%);
+  --jt-bg2:          hsl(36, 25%, 92%);
+  --jt-bg3:          hsl(34, 20%, 87%);
+  --jt-text:         hsl(20, 15%, 18%);
+  --jt-text-muted:   hsl(25, 10%, 48%);
+  --jt-amber:        hsl(35, 80%, 42%);
+  --jt-amber-dim:    hsla(35, 80%, 42%, 0.1);
+  --jt-amber-glow:   hsla(35, 80%, 42%, 0.06);
+  --jt-border:       hsla(30, 20%, 40%, 0.1);
+  --jt-border-warm:  hsla(30, 20%, 40%, 0.2);
+
+  /* Node syntax colors - light */
+  --jt-node-array:   hsl(35, 80%, 35%);
+  --jt-node-object:  hsl(30, 70%, 40%);
+  --jt-node-key:     hsl(35, 65%, 38%);
+  --jt-node-default: hsl(20, 15%, 22%);
+  --jt-node-number:  #2e7d6b;
+  --jt-node-bool-t:  #3a7d44;
+  --jt-node-bool-f:  #a03030;
+  --jt-node-null:    hsl(25, 10%, 48%);
+  --jt-node-string:  hsl(20, 55%, 30%);
+  --jt-node-card-bg: hsl(36, 25%, 92%);
+  --jt-node-border:  hsla(30, 20%, 40%, 0.18);
+  --jt-edge-color:   hsla(30, 20%, 40%, 0.28);
+  --jt-dot-grid:     hsla(30, 20%, 40%, 0.08);
+
+  /* Editor bg */
+  --jt-editor-bg:    hsl(38, 25%, 97%);
+}
+
+/* ============================================================
+   ROOT WRAPPER
+   ============================================================ */
+.json-tree-root {
+  font-family: 'Space Grotesk', sans-serif !important;
+  background: var(--jt-bg) !important;
+  color: var(--jt-text) !important;
+  /* Override portfolio's global cursor:none */
+  cursor: default !important;
+}
+
+/* Restore normal cursors for all children */
+.json-tree-root *,
+.json-tree-root a,
+.json-tree-root button,
+.json-tree-root input,
+.json-tree-root textarea,
+.json-tree-root select,
+.json-tree-root [role="button"] {
+  cursor: auto !important;
+}
+
+.json-tree-root button,
+.json-tree-root [role="button"],
+.json-tree-root .jt-btn,
+.json-tree-root .jt-logo {
+  cursor: pointer !important;
+}
+
+.json-tree-root input,
+.json-tree-root textarea {
+  cursor: text !important;
+}
+
+/* Monaco editor needs pointer cursor on interactive parts */
+.json-tree-root .monaco-editor {
+  cursor: text !important;
+}
+
+.json-tree-root .active\:cursor-move:active,
+.json-tree-root .active\:\!cursor-move:active {
+  cursor: move !important;
+}
+
+/* Modals/portals rendered outside .json-tree-root also need cursor fix */
+[data-headlessui-state] *,
+[data-headlessui-portal] *,
+.headlessui-portal *,
+[id^="headlessui-dialog"] * {
+  cursor: auto !important;
+}
+
+[data-headlessui-state] button,
+[data-headlessui-portal] button,
+[id^="headlessui-dialog"] button,
+[data-headlessui-state] [role="button"] {
+  cursor: pointer !important;
+}
+
+[data-headlessui-state] input,
+[data-headlessui-portal] input {
+  cursor: text !important;
+}
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+.jt-navbar {
+  position: relative;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  background: var(--jt-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--jt-border-warm);
+  box-shadow: 0 1px 0 var(--jt-amber-glow), 0 4px 24px rgba(0,0,0,0.15);
+  z-index: 100;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+/* Amber gradient line at top */
+.jt-navbar::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--jt-amber) 30%,
+    var(--jt-amber) 50%,
+    var(--jt-amber) 70%,
+    transparent 100%
+  );
+  opacity: 0.4;
+}
+
+/* ---- Logo ---- */
+.jt-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.jt-logo-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--jt-amber-dim);
+  border: 1px solid var(--jt-border-warm);
+  border-radius: 7px;
+  padding: 5px;
+  box-shadow: 0 0 12px var(--jt-amber-glow);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.jt-logo-icon svg {
+  color: var(--jt-amber) !important;
+  fill: var(--jt-amber) !important;
+}
+
+.jt-logo-text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--jt-text);
+  transition: color 0.3s ease;
+}
+
+/* ============================================================
+   TOOLBAR
+   ============================================================ */
+.jt-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.jt-sep {
+  width: 1px;
+  height: 20px;
+  background: var(--jt-border-warm);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+/* Base button */
+.jt-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  height: 32px !important;
+  padding: 0 12px !important;
+  background: var(--jt-bg3) !important;
+  border: 1px solid var(--jt-border-warm) !important;
+  border-radius: 6px !important;
+  color: var(--jt-text-muted) !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  font-family: 'Space Grotesk', sans-serif !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  white-space: nowrap !important;
+}
+
+.jt-btn:hover {
+  background: var(--jt-amber-dim) !important;
+  border-color: hsla(40, 70%, 55%, 0.4) !important;
+  color: var(--jt-amber) !important;
+  box-shadow: 0 0 10px var(--jt-amber-glow) !important;
+}
+
+.jt-btn:active {
+  transform: scale(0.97) !important;
+}
+
+/* Icon-only */
+.jt-btn-icon {
+  width: 32px !important;
+  padding: 0 !important;
+}
+
+/* Active / toggled */
+.jt-btn-active {
+  background: var(--jt-amber-dim) !important;
+  border-color: hsla(40, 70%, 55%, 0.4) !important;
+  color: var(--jt-amber) !important;
+  box-shadow: 0 0 10px var(--jt-amber-glow) !important;
+}
+
+/* Import button */
+.jt-btn-import {
+  background: var(--jt-amber-dim) !important;
+  border-color: hsla(40, 70%, 55%, 0.3) !important;
+  color: var(--jt-amber) !important;
+}
+
+.jt-btn-import:hover {
+  background: var(--jt-amber-dim) !important;
+  border-color: var(--jt-amber) !important;
+}
+
+/* ============================================================
+   ALLOTMENT SASH
+   ============================================================ */
+.sash {
+  background: var(--jt-border-warm) !important;
+  transition: background 0.2s ease !important;
+}
+
+.sash:hover,
+.sash.active {
+  background: var(--jt-amber) !important;
+}
+
+/* ============================================================
+   SCROLLBARS
+   ============================================================ */
+.json-tree-root ::-webkit-scrollbar { width: 3px; height: 3px; }
+.json-tree-root ::-webkit-scrollbar-track { background: var(--jt-bg); }
+.json-tree-root ::-webkit-scrollbar-thumb { background: var(--jt-bg3); border-radius: 100px; }
+.json-tree-root ::-webkit-scrollbar-thumb:hover { background: var(--jt-amber); }
+
+/* ============================================================
+   TEXT SELECTION
+   ============================================================ */
+.json-tree-root ::selection {
+  background: var(--jt-amber);
+  color: var(--jt-bg);
+}
+
+/* ============================================================
+   JSON TREE GRAPH BACKGROUND (dot grid)
+   ============================================================ */
+.jt-graph-bg {
+  background-image: radial-gradient(circle, var(--jt-dot-grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* ============================================================
+   TREE NODE CARDS
+   ============================================================ */
+.jt-tree-node-inner {
+  display: flex;
+  align-items: center;
+  background: var(--jt-node-card-bg);
+  border: 1px solid var(--jt-node-border);
+  border-radius: 7px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12), inset 0 1px 0 var(--jt-border);
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.jt-tree-node-highlighted .jt-tree-node-inner {
+  border-color: var(--jt-amber) !important;
+  box-shadow: 0 0 16px var(--jt-amber-glow), 0 2px 12px rgba(0,0,0,0.12) !important;
+  background: var(--jt-amber-dim) !important;
+}
+
+/* ============================================================
+   SYNTAX TOKEN COLORS (all using CSS variables)
+   ============================================================ */
+.jt-node-array   { color: var(--jt-node-array)   !important; }
+.jt-node-object  { color: var(--jt-node-object)  !important; }
+.jt-node-key     { color: var(--jt-node-key)     !important; font-family: 'Share Tech Mono', monospace; }
+.jt-node-default { color: var(--jt-node-default) !important; }
+.jt-node-number  { color: var(--jt-node-number)  !important; }
+.jt-node-bool-true  { color: var(--jt-node-bool-t) !important; }
+.jt-node-bool-false { color: var(--jt-node-bool-f) !important; }
+.jt-node-null    { color: var(--jt-node-null)    !important; font-style: italic; }
+.jt-node-string  { color: var(--jt-node-string)  !important; }
+
+/* ============================================================
+   TREE EDGES / CONNECTORS
+   ============================================================ */
+.reaflow-canvas .edge path,
+.reaflow-canvas .edge .edge-container path {
+  stroke: var(--jt-edge-color) !important;
+  stroke-width: 1.5 !important;
+}
+
+.reaflow-canvas .edge:hover path {
+  stroke: var(--jt-amber) !important;
+  opacity: 0.6;
+}
+
+.reaflow-canvas marker path {
+  fill: var(--jt-edge-color) !important;
+}
+
+/* ============================================================
+   COLLAPSE / EXPAND BUTTON
+   ============================================================ */
+.jt-tree-node button {
+  background: var(--jt-bg3) !important;
+  border: 1px solid var(--jt-border-warm) !important;
+  border-radius: 5px !important;
+  color: var(--jt-text-muted) !important;
+  transition: all 0.2s ease !important;
+}
+
+.jt-tree-node button:hover {
+  background: var(--jt-amber-dim) !important;
+  border-color: var(--jt-amber) !important;
+  color: var(--jt-amber) !important;
+}
+
+/* ============================================================
+   NOISE GRAIN
+   ============================================================ */
+.json-tree-root::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.02;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}

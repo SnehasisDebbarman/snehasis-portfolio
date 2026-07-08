@@ -3,19 +3,35 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@headlessui/react": "^1.7.19",
+    "@monaco-editor/react": "^4.7.0",
+    "@types/lodash.debounce": "^4.0.9",
+    "@types/node": "^18.19.130",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "allotment": "^1.20.5",
+    "elkjs": "^0.11.1",
+    "html-to-image": "^1.11.13",
+    "jsonc-parser": "^3.3.1",
+    "lodash.debounce": "^4.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.6.0",
     "react-router-dom": "^7.18.0",
     "react-scripts": "5.0.1",
     "react-scroll": "^1.8.9",
+    "react-zoom-pan-pinch": "^4.0.3",
+    "reaflow": "^5.4.1",
     "sass": "^1.56.1",
-    "validator": "^13.9.0"
+    "typescript": "^4.9.5",
+    "validator": "^13.9.0",
+    "zustand": "^5.0.14"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "postinstall": "sed -i '' \"s/'elkjs\\/lib\\/elk-api'/'elkjs\\/lib\\/elk-api.js'/g\" node_modules/reaflow/dist/*.js || true",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -35,5 +51,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-app-rewired": "^2.2.1"
   }
 }

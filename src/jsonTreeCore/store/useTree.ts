@@ -1,0 +1,293 @@
+import { create } from "zustand";
+import { ReactZoomPanPinchRef } from "react-zoom-pan-pinch";
+import { CanvasDirection } from "reaflow/dist/layout/elkLayout";
+import { getChildrenEdges } from "../core/graph/getChildrenEdges";
+import { getCollapsedGraphState } from "../core/graph/getCollapsedGraphState";
+import { getOutgoers } from "../core/graph/getOutgoers";
+import { getNodePath } from "../core/json/getNodePath";
+import { parser } from "../core/json/jsonParser";
+import { useJson } from "../store/useJson";
+import { EdgeData, NodeData } from "../core/type";
+
+const AUTO_COLLAPSE_NODE_THRESHOLD = 450;
+const GRAPH_WORKER_CHUNK_SIZE = 240;
+
+let currentJobId = 0;
+
+const initialStates = {
+  zoomPanPinch: null as ReactZoomPanPinchRef | null,
+  direction: "RIGHT" as CanvasDirection,
+  loading: true,
+  loadedNodes: 0,
+  totalNodes: 0,
+  loadedEdges: 0,
+  totalEdges: 0,
+  graphCollapsed: false,
+  largeGraphMode: false,
+  foldNodes: false,
+  fullscreen: false,
+  nodes: [] as NodeData[],
+  edges: [] as EdgeData[],
+  collapsedNodes: [] as string[],
+  collapsedEdges: [] as string[],
+  collapsedParents: [] as string[],
+  selectedNode: {} as NodeData,
+  path: "",
+  hoveredNodeId: null as string | null,
+};
+
+export type Graph = typeof initialStates;
+
+interface GraphActions {
+  setGraph: (json?: string, options?: Partial<Graph>) => void;
+  setLoading: (loading: boolean) => void;
+  setDirection: (direction: CanvasDirection) => void;
+  setZoomPanPinch: (ref: ReactZoomPanPinchRef) => void;
+  setSelectedNode: (nodeData: NodeData) => void;
+  setHoveredNodeId: (nodeId: string | null) => void;
+  expandNodes: (nodeId: string) => void;
+  expandGraph: () => void;
+  collapseNodes: (nodeId: string) => void;
+  collapseGraph: () => void;
+  toggleFold: (value: boolean) => void;
+  toggleFullscreen: (value: boolean) => void;
+  zoomIn: () => void;
+  zoomOut: () => void;
+  centerView: () => void;
+  centerOnNode: (nodeId: string) => void;
+  clearGraph: () => void;
+}
+
+export const useTree = create<Graph & GraphActions>((set, get) => ({
+  ...initialStates,
+  clearGraph: () => {
+    currentJobId += 1;
+    set({
+      nodes: [],
+      edges: [],
+      collapsedParents: [],
+      collapsedNodes: [],
+      collapsedEdges: [],
+      graphCollapsed: false,
+      largeGraphMode: false,
+      loadedNodes: 0,
+      totalNodes: 0,
+      loadedEdges: 0,
+      totalEdges: 0,
+      selectedNode: {} as NodeData,
+      path: "",
+      loading: false,
+    });
+  },
+  setSelectedNode: (nodeData) =>
+    set((state) => ({
+      selectedNode: nodeData,
+      path:
+        nodeData.path && nodeData.path.length > 0
+          ? nodeData.path
+          : getNodePath(state.nodes, state.edges, nodeData.id),
+    })),
+  setHoveredNodeId: (nodeId) => set({ hoveredNodeId: nodeId }),
+  setGraph: (data, options) => {
+    const graphContent = data ?? useJson.getState().json;
+    set({
+      nodes: [],
+      edges: [],
+      collapsedParents: [],
+      collapsedNodes: [],
+      collapsedEdges: [],
+      graphCollapsed: false,
+      largeGraphMode: false,
+      loadedNodes: 0,
+      totalNodes: 0,
+      loadedEdges: 0,
+      totalEdges: 0,
+      selectedNode: {} as NodeData,
+      path: "",
+      loading: true,
+      hoveredNodeId: null,
+      ...options,
+    });
+
+    // Process synchronously (Web Worker not supported in CRA 4 / Webpack 4)
+    setTimeout(() => {
+      const { nodes, edges } = parser(graphContent);
+      const shouldAutoCollapse = nodes.length > AUTO_COLLAPSE_NODE_THRESHOLD;
+      const collapsedStates = shouldAutoCollapse
+        ? getCollapsedGraphState(nodes, edges)
+        : {
+            collapsedParents: [],
+            collapsedNodes: [],
+            collapsedEdges: [],
+            graphCollapsed: false,
+          };
+
+      set({
+        nodes,
+        edges,
+        ...collapsedStates,
+        largeGraphMode: shouldAutoCollapse,
+        loadedNodes: nodes.length,
+        totalNodes: nodes.length,
+        loadedEdges: edges.length,
+        totalEdges: edges.length,
+        loading: false,
+      });
+    }, 0);
+  },
+  setDirection: (direction = "RIGHT") => {
+    set({ direction });
+    setTimeout(() => get().centerView(), 200);
+  },
+  setLoading: (loading) => set({ loading }),
+  expandNodes: (nodeId) => {
+    if (get().largeGraphMode) {
+      const edges = get().edges;
+      const nodes = get().nodes;
+      const directEdges = edges.filter((edge) => edge.from === nodeId);
+      const directNodeIds = directEdges
+        .map((edge) => edge.to)
+        .filter((id): id is string => Boolean(id));
+
+      const collapsedParentsWithoutCurrent = get().collapsedParents.filter(
+        (cp) => cp !== nodeId,
+      );
+      const directParentNodeIds = nodes
+        .filter(
+          (node) => directNodeIds.includes(node.id) && node.data?.isParent,
+        )
+        .map((node) => node.id);
+
+      const collapsedParents = Array.from(
+        new Set(collapsedParentsWithoutCurrent.concat(directParentNodeIds)),
+      );
+      const collapsedNodes = get().collapsedNodes.filter(
+        (id) => !directNodeIds.includes(id),
+      );
+      const directEdgeIds = directEdges.map((edge) => edge.id);
+      const collapsedEdges = get().collapsedEdges.filter(
+        (id) => !directEdgeIds.includes(id),
+      );
+
+      set({
+        collapsedParents,
+        collapsedNodes,
+        collapsedEdges,
+        graphCollapsed: collapsedNodes.length > 0 || collapsedEdges.length > 0,
+      });
+      return;
+    }
+
+    const [childrenNodes, matchingNodes] = getOutgoers(
+      nodeId,
+      get().nodes,
+      get().edges,
+      get().collapsedParents,
+    );
+    const childrenEdges = getChildrenEdges(childrenNodes, get().edges);
+
+    let nodesConnectedToParent = childrenEdges.reduce(
+      (nodes: string[], edge) => {
+        edge.from && !nodes.includes(edge.from) && nodes.push(edge.from);
+        edge.to && !nodes.includes(edge.to) && nodes.push(edge.to);
+        return nodes;
+      },
+      [],
+    );
+    const matchingNodesConnectedToParent = matchingNodes.filter((node) =>
+      nodesConnectedToParent.includes(node),
+    );
+    const nodeIds = childrenNodes
+      .map((node) => node.id)
+      .concat(matchingNodesConnectedToParent);
+    const edgeIds = childrenEdges.map((edge) => edge.id);
+
+    const collapsedParents = get().collapsedParents.filter(
+      (cp) => cp !== nodeId,
+    );
+    const collapsedNodes = get().collapsedNodes.filter(
+      (nodeId) => !nodeIds.includes(nodeId),
+    );
+    const collapsedEdges = get().collapsedEdges.filter(
+      (edgeId) => !edgeIds.includes(edgeId),
+    );
+
+    set({
+      collapsedParents,
+      collapsedNodes,
+      collapsedEdges,
+      graphCollapsed: !!collapsedNodes.length,
+    });
+  },
+  collapseNodes: (nodeId) => {
+    const [childrenNodes] = getOutgoers(nodeId, get().nodes, get().edges);
+    const childrenEdges = getChildrenEdges(childrenNodes, get().edges);
+
+    const nodeIds = childrenNodes.map((node) => node.id);
+    const edgeIds = childrenEdges.map((edge) => edge.id);
+    const collapsedParents = Array.from(
+      new Set(get().collapsedParents.concat(nodeId)),
+    );
+    const collapsedNodes = Array.from(
+      new Set(get().collapsedNodes.concat(nodeIds)),
+    );
+    const collapsedEdges = Array.from(
+      new Set(get().collapsedEdges.concat(edgeIds)),
+    );
+
+    set({
+      collapsedParents,
+      collapsedNodes,
+      collapsedEdges,
+      graphCollapsed: collapsedNodes.length > 0 || collapsedEdges.length > 0,
+    });
+  },
+  collapseGraph: () => {
+    const collapsedStates = getCollapsedGraphState(get().nodes, get().edges);
+    set(collapsedStates);
+  },
+  expandGraph: () => {
+    set({
+      collapsedNodes: [],
+      collapsedEdges: [],
+      collapsedParents: [],
+      graphCollapsed: false,
+    });
+  },
+  zoomIn: () => {
+    const zoomPanPinch = get().zoomPanPinch;
+    zoomPanPinch?.setTransform(
+      zoomPanPinch?.state.positionX,
+      zoomPanPinch?.state.positionY,
+      zoomPanPinch?.state.scale + 0.4,
+    );
+  },
+  zoomOut: () => {
+    const zoomPanPinch = get().zoomPanPinch;
+    zoomPanPinch?.setTransform(
+      zoomPanPinch?.state.positionX,
+      zoomPanPinch?.state.positionY,
+      zoomPanPinch?.state.scale - 0.4,
+    );
+  },
+  centerView: () => {
+    const zoomPanPinch = get().zoomPanPinch;
+    const canvas = document.querySelector(".jsontree-canvas") as HTMLElement;
+    if (zoomPanPinch && canvas) zoomPanPinch.zoomToElement(canvas);
+  },
+  centerOnNode: (nodeId) => {
+    const zoomPanPinch = get().zoomPanPinch;
+    const el = document.querySelector(
+      `[data-node-id="${nodeId}"]`,
+    ) as HTMLElement;
+    if (zoomPanPinch && el) zoomPanPinch.zoomToElement(el);
+    const node = get().nodes.find((n) => n.id === nodeId);
+    if (node) get().setSelectedNode(node);
+  },
+  toggleFold: (foldNodes) => {
+    set({ foldNodes });
+    get().setGraph();
+  },
+  toggleFullscreen: (fullscreen) => set({ fullscreen }),
+  setZoomPanPinch: (zoomPanPinch) => set({ zoomPanPinch }),
+}));

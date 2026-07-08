@@ -7,8 +7,9 @@ import img1 from "../assets/images/thumbnail-project-1-large.jpeg";
 import img2 from "../assets/images/thumbnail-project-2-large.png";
 import img3 from "../assets/images/thumbnail-project-3-large.jpeg";
 import img4 from "../assets/images/thumbnail-project-4-large.jpeg";
+import img5 from "../assets/images/thumbnail-project-5-large.png";
 
-const images = [img1, img2, img3, img4];
+const images = [img1, img2, img3, img4, img5];
 
 export default function Projects() {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -42,6 +43,13 @@ export default function Projects() {
       langs: "HTML CSS React",
       code: "https://github.com/SnehasisDebbarman/portfolio2",
       link: "https://snehasisdebbarman-terminal-portfolio.netlify.app/"
+    },
+    {
+      title: "JSON Tree Viewer",
+      description: "Interactive visualizer tool for JSON in a graph and tree form.",
+      langs: "React TypeScript Zustand Reaflow",
+      code: "https://github.com/SnehasisDebbarman/snehasis-portfolio",
+      link: "/json-tree"
     }
   ];
 

@@ -14,6 +14,7 @@ import StatusBar from "./components/StatusBar";
 import BlogList from "./components/BlogList";
 import BlogPost from "./components/BlogPost";
 import Recommendations from "./components/Recommendations";
+import JsonTree from "./components/JsonTree";
 
 function MainPortfolio() {
   return (
@@ -47,24 +48,36 @@ function HashScrollHandler() {
   return null;
 }
 
-function App() {
+function AppContent() {
+  const location = useLocation();
+  const isJsonTree = location.pathname === "/json-tree";
+
   return (
-    <BrowserRouter>
+    <>
       <HashScrollHandler />
-      <CustomCursor />
-      <FluidBackground />
-      <div style={{ position: "relative", zIndex: 1 }}>
-        <Header />
-        <main style={{ paddingBottom: "44px" }}>
+      {!isJsonTree && <CustomCursor />}
+      {!isJsonTree && <FluidBackground />}
+      <div style={isJsonTree ? { position: "relative", zIndex: 1, height: "100vh", overflow: "hidden" } : { position: "relative", zIndex: 1 }}>
+        {!isJsonTree && <Header />}
+        <main style={isJsonTree ? { height: "100%", display: "block", padding: 0 } : { paddingBottom: "44px" }}>
           <Routes>
             <Route path="/" element={<MainPortfolio />} />
             <Route path="/blog" element={<BlogList />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/json-tree" element={<JsonTree />} />
           </Routes>
         </main>
-        <Footer />
-        <StatusBar />
+        {!isJsonTree && <Footer />}
+        {!isJsonTree && <StatusBar />}
       </div>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
     </BrowserRouter>
   );
 }
