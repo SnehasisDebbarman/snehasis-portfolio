@@ -10,8 +10,8 @@ export function Searchbar() {
         alignItems: "center",
         gap: 6,
         height: 32,
-        background: "hsl(14, 6%, 16%)",
-        border: "1px solid hsla(38, 20%, 60%, 0.18)",
+        background: "var(--jt-bg3)",
+        border: "1px solid var(--jt-border-warm)",
         borderRadius: 6,
         padding: "0 10px",
         transition: "all 0.2s ease",
@@ -19,14 +19,14 @@ export function Searchbar() {
       }}
       onFocus={(e) => {
         const el = e.currentTarget as HTMLDivElement;
-        el.style.borderColor = "hsla(40, 70%, 67%, 0.45)";
-        el.style.background = "hsla(40, 70%, 67%, 0.06)";
-        el.style.boxShadow = "0 0 0 2px hsla(40, 70%, 67%, 0.08)";
+        el.style.borderColor = "var(--jt-amber)";
+        el.style.background = "var(--jt-amber-dim)";
+        el.style.boxShadow = "0 0 0 2px var(--jt-amber-glow)";
       }}
       onBlur={(e) => {
         const el = e.currentTarget as HTMLDivElement;
-        el.style.borderColor = "hsla(38, 20%, 60%, 0.18)";
-        el.style.background = "hsl(14, 6%, 16%)";
+        el.style.borderColor = "var(--jt-border-warm)";
+        el.style.background = "var(--jt-bg3)";
         el.style.boxShadow = "none";
       }}
     >
@@ -39,7 +39,7 @@ export function Searchbar() {
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        style={{ color: "hsl(30, 10%, 52%)", flexShrink: 0 }}
+        style={{ color: "var(--jt-text-muted)", flexShrink: 0 }}
       >
         <circle cx="11" cy="11" r="8" />
         <path d="m21 21-4.35-4.35" />
@@ -51,7 +51,7 @@ export function Searchbar() {
           background: "transparent",
           border: "none",
           outline: "none",
-          color: "hsl(38, 25%, 94%)",
+          color: "var(--jt-text)",
           fontSize: 12,
           width: "100%",
           fontFamily: "'Space Grotesk', sans-serif",
@@ -61,9 +61,9 @@ export function Searchbar() {
         onKeyDown={getHotkeyHandler([["Enter", skip]])}
       />
       {nodeCount > 0 && (
-        <div style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 11, color: "hsl(40, 70%, 67%)", flexShrink: 0, fontWeight: 600 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 11, color: "var(--jt-amber)", flexShrink: 0, fontWeight: 600 }}>
           <span>{currentNode + 1}</span>
-          <span style={{ color: "#475569" }}>/</span>
+          <span style={{ color: "var(--jt-text-muted)" }}>/</span>
           <span>{nodeCount}</span>
         </div>
       )}
