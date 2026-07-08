@@ -47,9 +47,7 @@ export default function JsonTree() {
     setContents({ contents: JSON_TEMPLATE, hasChanges: false });
   }, [setContents]);
 
-  useEffect(() => {
-    if (isScreenLessThan) toggleFullscreen(true);
-  }, [isScreenLessThan, toggleFullscreen]);
+  // Removed auto-fullscreen on mobile so users can use the editor on mobile too
 
   const contentHeight = `calc(100vh - ${NAVBAR_HEIGHT}px)`;
 
@@ -80,11 +78,12 @@ export default function JsonTree() {
         <Allotment
           style={{ position: "relative", height: contentHeight }}
           proportionalLayout={false}
+          vertical={isScreenLessThan}
         >
           <Allotment.Pane
             style={{ height: "100%", background: "var(--jt-bg2)" }}
-            preferredSize={isScreenLessThan ? "100%" : 450}
-            minSize={fullscreen ? 0 : 450}
+            preferredSize={isScreenLessThan ? "40%" : 450}
+            minSize={fullscreen ? 0 : (isScreenLessThan ? 100 : 450)}
             maxSize={isScreenLessThan ? Infinity : 700}
             visible={!fullscreen}
           >
@@ -92,7 +91,7 @@ export default function JsonTree() {
           </Allotment.Pane>
           <Allotment.Pane
             minSize={0}
-            maxSize={isScreenLessThan && !fullscreen ? 0 : Infinity}
+            maxSize={Infinity}
             style={{ display: "flex", width: "100%", position: "relative", background: "var(--jt-bg)" }}
           >
             <TreeEditor />
