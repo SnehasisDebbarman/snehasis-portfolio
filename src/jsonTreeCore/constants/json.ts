@@ -1,54 +1,11 @@
 const sampleJson = Object.freeze({
-  name: "jsontree",
-  version: "0.1.0",
-  private: true,
-  authors: [
-    {
-      name: "Amit Chauhan",
-      email: "amitchauhan263871@gmail.com",
-    },
-    {
-      github: "https://github.com/BUMBAIYA/jsontree",
-    },
-  ],
-  scripts: {
-    dev: "next dev",
-    build: "next build",
-    start: "next start",
-    lint: "next lint",
-    prepare: "husky install",
+  user: {
+    id: 1,
+    name: "John Doe",
+    email: "john@example.com",
+    isActive: true,
   },
-  dependencies: {
-    "@headlessui/react": "^1.7.15",
-    "@monaco-editor/react": "^4.5.1",
-    "@tailwindcss/forms": "^0.5.4",
-    "@types/node": "20.3.2",
-    "@types/react": "18.2.14",
-    "@types/react-dom": "18.2.6",
-    allotment: "^1.19.0",
-    autoprefixer: "10.4.14",
-    eslint: "8.43.0",
-    "eslint-config-next": "13.4.7",
-    "html-to-image": "^1.11.11",
-    "jsonc-parser": "^3.2.0",
-    "lodash.debounce": "^4.0.8",
-    next: "14.2.35",
-    postcss: "8.4.24",
-    prettier: "^2.8.8",
-    "prettier-plugin-tailwindcss": "^0.3.0",
-    react: "18.2.0",
-    "react-dom": "18.2.0",
-    "react-zoom-pan-pinch": "^3.1.0",
-    reaflow: "5.1.2",
-    tailwindcss: "3.3.2",
-    typescript: "5.1.6",
-    zustand: "^4.3.9",
-  },
-  devDependencies: {
-    "@types/lodash.debounce": "^4.0.7",
-    husky: "^8.0.3",
-    "lint-staged": "^13.2.3",
-  },
+  roles: ["admin", "editor"],
 });
 
 export const JSON_TEMPLATE = JSON.stringify(sampleJson, null, 2);
