@@ -108,7 +108,23 @@ export default function MonacoEditor() {
       options={editorOptions}
       beforeMount={definePortfolioTheme}
       onValidate={(errors) => setError(errors[0]?.message)}
-      onChange={(contents) => setContents({ contents, skipUpdate: true })}
+      onChange={(contents) => {
+        let finalContents = contents || "";
+        const nextDataMatch = finalContents.match(/<script[^>]*id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
+        if (nextDataMatch && nextDataMatch[1]) {
+          try {
+            // Optional: try parsing to ensure it's valid before replacing the editor content
+            const extracted = nextDataMatch[1].trim();
+            JSON.parse(extracted);
+            // Format it nicely
+            finalContents = JSON.stringify(JSON.parse(extracted), null, 2);
+          } catch (e) {
+            // If it fails to parse, just use the extracted text as is
+            finalContents = nextDataMatch[1].trim();
+          }
+        }
+        setContents({ contents: finalContents, skipUpdate: true });
+      }}
     />
   );
 }

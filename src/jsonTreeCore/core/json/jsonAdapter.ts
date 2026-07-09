@@ -1,6 +1,11 @@
 const contentToJson = async (value: string): Promise<object> => {
   try {
-    let json: object = JSON.parse(value);
+    let jsonStr = value;
+    const nextDataMatch = value.match(/<script[^>]*id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
+    if (nextDataMatch && nextDataMatch[1]) {
+      jsonStr = nextDataMatch[1].trim();
+    }
+    let json: object = JSON.parse(jsonStr);
     return Promise.resolve(json);
   } catch (error: any) {
     throw error;
