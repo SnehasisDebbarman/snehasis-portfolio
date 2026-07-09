@@ -1,6 +1,5 @@
 import { Dialog, Switch, Transition } from "@headlessui/react";
 import { Dispatch, Fragment, SetStateAction, useState } from "react";
-import { toPng, toSvg } from "html-to-image";
 import { useStored } from "../../store/useStored";
 import { CancelIcon } from "../../components/icons";
 
@@ -12,6 +11,56 @@ function downloadURI(uri: string, name: string) {
   link.click();
   document.body.removeChild(link);
 }
+
+/**
+ * Inline all computed styles from a source element onto a cloned element,
+ * then recurse into children. This ensures no CSS class / variable dependency.
+ */
+const inlineStyles = (source: Element, target: Element) => {
+  if (source instanceof HTMLElement || source instanceof SVGElement) {
+    const computed = getComputedStyle(source);
+    const targetEl = target as HTMLElement | SVGElement;
+
+    // For SVG elements, set key presentational attributes directly
+    if (source instanceof SVGElement && !(source instanceof SVGSVGElement)) {
+      const svgTarget = target as SVGElement;
+      const fill = computed.getPropertyValue("fill");
+      const stroke = computed.getPropertyValue("stroke");
+      const strokeWidth = computed.getPropertyValue("stroke-width");
+      if (fill) svgTarget.setAttribute("fill", fill);
+      if (stroke && stroke !== "none") svgTarget.setAttribute("stroke", stroke);
+      if (strokeWidth) svgTarget.setAttribute("stroke-width", strokeWidth);
+    }
+
+    // For HTML elements (inside foreignObject), inline critical CSS properties
+    if (source instanceof HTMLElement) {
+      const importantProps = [
+        "color", "background-color", "background",
+        "border", "border-color", "border-width", "border-style", "border-radius",
+        "font-family", "font-size", "font-weight", "font-style",
+        "display", "flex-direction", "align-items", "justify-content", "gap",
+        "padding", "margin", "overflow", "text-overflow", "white-space",
+        "width", "height", "max-width", "max-height", "min-width", "min-height",
+        "box-sizing", "text-align", "letter-spacing", "line-height",
+        "opacity", "visibility", "position", "top", "left", "right", "bottom",
+        "box-shadow", "text-transform",
+      ];
+      importantProps.forEach((prop) => {
+        const val = computed.getPropertyValue(prop);
+        if (val) {
+          (targetEl as HTMLElement).style.setProperty(prop, val);
+        }
+      });
+    }
+  }
+
+  // Recurse into children
+  const sourceChildren = source.children;
+  const targetChildren = target.children;
+  for (let i = 0; i < sourceChildren.length && i < targetChildren.length; i++) {
+    inlineStyles(sourceChildren[i], targetChildren[i]);
+  }
+};
 
 export type DownloadDesignModal = {
   isOpen: boolean;
@@ -32,14 +81,164 @@ export function DownloadImageModal(props: DownloadDesignModal) {
 
   const exportAsImage = async () => {
     try {
-      const imageElement = document.querySelector("svg[id*='ref']") as HTMLElement;
-      let exportImage = isPNG ? toPng : toSvg;
-      const dataURI = await exportImage(imageElement, {
-        quality: 1,
-        backgroundColor: isTransparent ? "transparent" : lightmode ? "#f5f0e8" : "#171410",
+      const svgOriginal = document.querySelector("svg[id*='ref']") as SVGSVGElement;
+      if (!svgOriginal) return;
+
+      // Build a map from each live foreignObject to its text lines and colors,
+      // reading from the actual rendered DOM (so CSS variables are already resolved)
+      type TextLine = { text: string; color: string; isKey?: boolean };
+      type FoData = { x: number; y: number; width: number; height: number; lines: TextLine[] };
+      const foDataList: FoData[] = [];
+      const liveFos = svgOriginal.querySelectorAll("foreignObject");
+
+      liveFos.forEach((fo) => {
+        const fx = parseFloat(fo.getAttribute("x") || "0");
+        const fy = parseFloat(fo.getAttribute("y") || "0");
+        const fw = parseFloat(fo.getAttribute("width") || "0");
+        const fh = parseFloat(fo.getAttribute("height") || "0");
+
+        const lines: TextLine[] = [];
+
+        // Collect all visible text nodes with their computed color
+        const textSpans = fo.querySelectorAll("span[data-key], span[class*='jt-node']");
+        if (textSpans.length > 0) {
+          textSpans.forEach((span) => {
+            const text = (span as HTMLElement).innerText?.trim();
+            if (!text) return;
+            const color = getComputedStyle(span as HTMLElement).color;
+            lines.push({ text, color });
+          });
+        } else {
+          // Fallback: grab all inner text
+          const inner = fo.querySelector(".jt-tree-node-inner");
+          if (inner) {
+            const text = (inner as HTMLElement).innerText?.trim().replace(/\n+/g, " • ");
+            if (text) {
+              const color = getComputedStyle(inner as HTMLElement).color;
+              lines.push({ text, color });
+            }
+          }
+        }
+
+        if (lines.length > 0) {
+          foDataList.push({ x: fx, y: fy, width: fw, height: fh, lines });
+        }
       });
-      downloadURI(dataURI, `${imageName}.${isPNG ? "png" : "svg"}`);
+
+      // Clone the SVG
+      const svgClone = svgOriginal.cloneNode(true) as SVGSVGElement;
+      inlineStyles(svgOriginal, svgClone);
+
+      // Replace each foreignObject in the clone with SVG <text> elements
+      const clonedFos = Array.from(svgClone.querySelectorAll("foreignObject"));
+      clonedFos.forEach((fo, idx) => {
+        const data = foDataList[idx];
+        if (!data) { fo.remove(); return; }
+
+        const ns = "http://www.w3.org/2000/svg";
+        const { x, y, width, height, lines } = data;
+
+        // Create a group to hold the text
+        const g = document.createElementNS(ns, "g");
+
+        if (lines.length === 1) {
+          // Single-line node: center the text
+          const text = document.createElementNS(ns, "text");
+          text.setAttribute("x", String(x + width / 2));
+          text.setAttribute("y", String(y + height / 2 + 4));
+          text.setAttribute("text-anchor", "middle");
+          text.setAttribute("dominant-baseline", "middle");
+          text.setAttribute("font-family", "Share Tech Mono, JetBrains Mono, monospace");
+          text.setAttribute("font-size", "11");
+          text.setAttribute("fill", lines[0].color || (lightmode ? "#332b1a" : "#f0e6d3"));
+          text.setAttribute("font-weight", "500");
+          text.textContent = lines[0].text;
+          g.appendChild(text);
+        } else {
+          // Multi-line node (object node): stack lines
+          const lineH = Math.min(16, height / (lines.length + 1));
+          const startY = y + height / 2 - ((lines.length - 1) * lineH) / 2;
+          lines.forEach((line, i) => {
+            const text = document.createElementNS(ns, "text");
+            text.setAttribute("x", String(x + 10));
+            text.setAttribute("y", String(startY + i * lineH));
+            text.setAttribute("text-anchor", "start");
+            text.setAttribute("dominant-baseline", "middle");
+            text.setAttribute("font-family", "Share Tech Mono, JetBrains Mono, monospace");
+            text.setAttribute("font-size", "10");
+            text.setAttribute("fill", line.color || (lightmode ? "#332b1a" : "#f0e6d3"));
+            // Truncate long text
+            const maxChars = Math.floor(width / 6.5);
+            text.textContent = line.text.length > maxChars
+              ? line.text.slice(0, maxChars - 1) + "…"
+              : line.text;
+            g.appendChild(text);
+          });
+        }
+
+        fo.parentNode?.replaceChild(g, fo);
+      });
+
+      // Set viewBox and dimensions
+      const bbox = svgOriginal.getBBox();
+      const padding = 40;
+      svgClone.setAttribute("viewBox", `${bbox.x - padding} ${bbox.y - padding} ${bbox.width + padding * 2} ${bbox.height + padding * 2}`);
+      svgClone.setAttribute("width", String(bbox.width + padding * 2));
+      svgClone.setAttribute("height", String(bbox.height + padding * 2));
+      svgClone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      svgClone.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+
+      // Background rect
+      if (!isTransparent) {
+        const bgRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        bgRect.setAttribute("x", String(bbox.x - padding));
+        bgRect.setAttribute("y", String(bbox.y - padding));
+        bgRect.setAttribute("width", String(bbox.width + padding * 2));
+        bgRect.setAttribute("height", String(bbox.height + padding * 2));
+        bgRect.setAttribute("fill", lightmode ? "#f5f0e8" : "#171410");
+        svgClone.insertBefore(bgRect, svgClone.firstChild);
+      }
+
+      const serializer = new XMLSerializer();
+      const svgString = serializer.serializeToString(svgClone);
+
+      if (!isPNG) {
+        const svgBlob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+        const svgUrl = URL.createObjectURL(svgBlob);
+        downloadURI(svgUrl, `${imageName}.svg`);
+        setTimeout(() => URL.revokeObjectURL(svgUrl), 1000);
+      } else {
+        const encoded = btoa(unescape(encodeURIComponent(svgString)));
+        const svgDataUrl = `data:image/svg+xml;base64,${encoded}`;
+        const W = bbox.width + padding * 2;
+        const H = bbox.height + padding * 2;
+        const scale = 2;
+
+        await new Promise<void>((resolve, reject) => {
+          const canvas = document.createElement("canvas");
+          canvas.width = W * scale;
+          canvas.height = H * scale;
+          const ctx = canvas.getContext("2d")!;
+          ctx.scale(scale, scale);
+
+          const img = new Image();
+          img.onload = () => {
+            try {
+              if (!isTransparent) {
+                ctx.fillStyle = lightmode ? "#f5f0e8" : "#171410";
+                ctx.fillRect(0, 0, W, H);
+              }
+              ctx.drawImage(img, 0, 0, W, H);
+              downloadURI(canvas.toDataURL("image/png", 1.0), `${imageName}.png`);
+              resolve();
+            } catch (e) { reject(e); }
+          };
+          img.onerror = reject;
+          img.src = svgDataUrl;
+        });
+      }
     } catch (error) {
+      console.error("Export failed:", error);
     } finally {
       handleClose();
     }

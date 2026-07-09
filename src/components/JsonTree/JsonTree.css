@@ -9,7 +9,7 @@
 /* ============================================================
    CSS TOKENS — DARK MODE (default, html.dark)
    ============================================================ */
-html.dark {
+html.dark, .json-tree-root.dark {
   --jt-bg:           hsl(14, 8%, 9%);
   --jt-bg2:          hsl(14, 7%, 12%);
   --jt-bg3:          hsl(14, 6%, 16%);
@@ -43,32 +43,32 @@ html.dark {
 /* ============================================================
    CSS TOKENS — LIGHT MODE (html without .dark class)
    ============================================================ */
-html:not(.dark) {
-  --jt-bg:           hsl(38, 30%, 96%);
-  --jt-bg2:          hsl(36, 25%, 92%);
-  --jt-bg3:          hsl(34, 20%, 87%);
-  --jt-text:         hsl(20, 15%, 18%);
-  --jt-text-muted:   hsl(25, 10%, 48%);
-  --jt-amber:        hsl(35, 80%, 42%);
-  --jt-amber-dim:    hsla(35, 80%, 42%, 0.1);
-  --jt-amber-glow:   hsla(35, 80%, 42%, 0.06);
-  --jt-border:       hsla(30, 20%, 40%, 0.1);
-  --jt-border-warm:  hsla(30, 20%, 40%, 0.2);
+html:not(.dark), .json-tree-root.light {
+  --jt-bg:           hsl(38, 25%, 93%);
+  --jt-bg2:          hsl(36, 22%, 88%);
+  --jt-bg3:          hsl(34, 18%, 80%);
+  --jt-text:         hsl(20, 20%, 10%);
+  --jt-text-muted:   hsl(25, 12%, 35%);
+  --jt-amber:        hsl(33, 90%, 32%);
+  --jt-amber-dim:    hsla(33, 90%, 32%, 0.12);
+  --jt-amber-glow:   hsla(33, 90%, 32%, 0.08);
+  --jt-border:       hsla(25, 25%, 25%, 0.18);
+  --jt-border-warm:  hsla(25, 25%, 25%, 0.32);
 
-  /* Node syntax colors - light */
-  --jt-node-array:   hsl(35, 80%, 35%);
-  --jt-node-object:  hsl(30, 70%, 40%);
-  --jt-node-key:     hsl(35, 65%, 38%);
-  --jt-node-default: hsl(20, 15%, 22%);
-  --jt-node-number:  #2e7d6b;
-  --jt-node-bool-t:  #3a7d44;
-  --jt-node-bool-f:  #a03030;
-  --jt-node-null:    hsl(25, 10%, 48%);
-  --jt-node-string:  hsl(20, 55%, 30%);
-  --jt-node-card-bg: hsl(36, 25%, 92%);
-  --jt-node-border:  hsla(30, 20%, 40%, 0.18);
-  --jt-edge-color:   hsla(30, 20%, 40%, 0.28);
-  --jt-dot-grid:     hsla(30, 20%, 40%, 0.08);
+  /* Node syntax colors - light (high contrast) */
+  --jt-node-array:   hsl(33, 90%, 28%);
+  --jt-node-object:  hsl(28, 80%, 32%);
+  --jt-node-key:     hsl(33, 75%, 30%);
+  --jt-node-default: hsl(20, 20%, 10%);
+  --jt-node-number:  #1a6b56;
+  --jt-node-bool-t:  #1e6b2e;
+  --jt-node-bool-f:  #8b1a1a;
+  --jt-node-null:    hsl(25, 12%, 38%);
+  --jt-node-string:  hsl(20, 65%, 24%);
+  --jt-node-card-bg: hsl(36, 30%, 97%);
+  --jt-node-border:  hsla(25, 30%, 30%, 0.30);
+  --jt-edge-color:   hsla(25, 35%, 28%, 0.55);
+  --jt-dot-grid:     hsla(25, 25%, 30%, 0.12);
 
   /* Editor bg */
   --jt-editor-bg:    hsl(38, 25%, 97%);
