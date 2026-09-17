@@ -43,7 +43,8 @@ const posts = fs
   .readdirSync(blogDirectory)
   .filter((fileName) => fileName.endsWith(".md") && !ignoredFiles.has(fileName))
   .map(readFrontmatter)
-  .sort((a, b) => new Date(b.date) - new Date(a.date));
+  .sort((a, b) => new Date(b.date) - new Date(a.date) ||
+    (Number(a.questionNumber) || Infinity) - (Number(b.questionNumber) || Infinity));
 
 const slugs = new Set();
 for (const post of posts) {

@@ -58,6 +58,7 @@ export default function BlogPost() {
         </Link>
 
         <header className={scss.article_header}>
+          {post.series === "interview" && <p className={scss.series_label}><Link to="/blog?series=interview">INTERVIEW NOTEBOOK</Link> · QUESTION {post.questionNumber} OF 100</p>}
           <div className={scss.article_meta}>
             <span className={scss.article_category}>{post.category}</span>
             <span className={scss.article_dot}>•</span>

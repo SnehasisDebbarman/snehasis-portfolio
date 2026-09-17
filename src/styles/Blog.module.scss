@@ -476,6 +476,15 @@
 .blog_filters label { flex: 1; min-width: 180px; color: #ddd7ce; font-size: 14px; }
 .blog_filters input, .blog_filters select { display: block; width: 100%; margin-top: 8px; padding: 14px; border: 1px solid #51483b; border-radius: 6px; color: #f5eee3; background: #1c1915; font: inherit; }
 .pagination, .page_numbers { flex-wrap: wrap; gap: 8px; }
+.series_intro { padding: 24px; margin-bottom: 32px; border: 1px solid #51483b; border-radius: 10px; background: #1c1915; color: #ddd7ce; font: 16px/1.7 system-ui, sans-serif; }
+.series_intro p { margin: 0 0 12px; }
+.series_intro p:first-child { color: #f5eee3; font-size: 21px; font-weight: 600; }
+.series_intro a, .series_label a { color: #e8bd79; text-decoration: underline; text-underline-offset: 4px; }
+.series_intro summary { color: #e8bd79; }
+.series_intro ul { padding-left: 22px; list-style: disc; }
+.series_intro li { margin: 10px 0; }
+.series_intro h2 { margin: 28px 0 12px; font-size: 22px; }
+.series_label { color: #c7c1b8; font: 13px/1.7 system-ui, sans-serif; margin-bottom: 24px; }
 @media (max-width: 600px) {
   .blog_section { padding-left: 20px; padding-right: 20px; }
   .blog_header { align-items: flex-start; gap: 12px; }
