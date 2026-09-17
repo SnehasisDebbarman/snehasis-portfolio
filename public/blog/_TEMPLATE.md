@@ -1,25 +1,40 @@
 ---
 slug: "your-post-slug"
-title: "Your Post Title"
-date: "September 17, 2026"
+title: "Your Topic: A Practical Guide"
+date: "September 18, 2026"
 readTime: "5 min read"
-category: "Frontend"
-excerpt: "One sentence that appears on the blog index."
+category: "JavaScript"
+excerpt: "Explain the problem this article helps the reader solve."
 ---
 
-Start with a short introduction that explains what the reader will learn.
+Introduce the problem, prerequisites and what the reader will build.
 
+## How it works
 
-### A section heading
+Explain the concept in plain language before introducing the implementation.
 
-Write your explanation here. You can use **bold text**, `inline code`, and [links](https://example.com).
+## Setup and complete example
 
-- Use bullet points when the ideas are parallel.
-- Keep each point short and useful.
+State the runtime, package versions when relevant, installation commands and filename. Use a language on every code fence (`js`, `jsx`, `tsx`, `html`, `css`, `bash`, or `json`). Code blocks automatically get highlighting and a copy button.
 
 ```js
-const example = "Code blocks are supported";
-console.log(example);
+// Run in a browser console or Node.js.
+function greet(name) {
+  return `Hello, ${name}!`;
+}
+console.log(greet("reader"));
 ```
 
-> Add a quote or a key takeaway here when it helps the reader.
+## Expected result
+
+The example prints `Hello, reader!`. Explain why, and suggest one change the reader can try.
+
+## Pitfalls and tradeoffs
+
+Describe error handling, cleanup, edge cases and when another approach is better. Mark incomplete teaching implementations clearly.
+
+## Sources and further reading
+
+- [MDN JavaScript guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide)
+
+Link directly to the official documentation used. Write your own explanation and examples rather than copying articles.

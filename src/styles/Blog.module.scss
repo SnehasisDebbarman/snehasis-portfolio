@@ -421,3 +421,65 @@
   border-color: color(amber) !important;
   background: rgba(color(amber), 0.05);
 }
+
+// Reading surfaces use native text selection and normal controls.
+.article_section, .blog_section {
+  cursor: auto;
+  a, button, summary, select { cursor: pointer !important; }
+  input, pre, code { cursor: text !important; }
+  :focus-visible { outline: 2px solid #e8bd79; outline-offset: 5px; }
+}
+.article_section { padding-left: 20px; padding-right: 20px; }
+.article_container { max-width: 820px; min-width: 0; }
+.article_meta { flex-wrap: wrap; line-height: 1.7; }
+.article_intro { color: #c7c1b8; font-size: 19px; line-height: 1.7; margin-top: 24px; }
+.article_body {
+  color: #ddd7ce;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: clamp(17px, 1.8vw, 19px);
+  line-height: 1.85;
+  overflow-wrap: anywhere;
+  h1, h2, h3, h4 { font-family: inherit; font-weight: 650; color: #f5eee3; line-height: 1.35; scroll-margin-top: 120px; }
+  h2 { font-size: clamp(25px, 3vw, 32px); margin-top: 56px; }
+  h3 { font-size: 23px; }
+  strong { color: #fff4e5; }
+  ul { list-style: disc; } ol { list-style: decimal; }
+  ul, ol { padding-left: 28px; }
+  li > p { margin-bottom: 10px; }
+  li > ul, li > ol { margin: 12px 0; }
+  code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; overflow-wrap: anywhere; }
+  img { max-width: 100%; height: auto; border-radius: 8px; }
+  hr { border: 0; border-top: 1px solid #51483b; margin: 36px 0; }
+  blockquote { font-family: inherit; font-size: 18px; background: #211d17; padding: 20px 24px; border-radius: 0 8px 8px 0; }
+  blockquote p:last-child { margin-bottom: 0; }
+}
+.contents { padding: 20px 24px; border: 1px solid #51483b; border-radius: 10px; background: #1c1915; margin: 32px 0; font-size: 16px; }
+.contents summary { font-weight: 650; color: #f5eee3; }
+.contents ul { margin: 16px 0 0; }
+.contents li { margin: 4px 0; }
+.code_block { border: 1px solid #494234; border-radius: 10px; margin: 24px 0 32px; overflow: hidden; background: #101319; }
+.code_toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; background: #22262e; color: #c9d2e2; font: 13px system-ui; }
+.code_toolbar button { color: #f9e2b8; border: 1px solid #697281; border-radius: 5px; padding: 8px 12px; background: #303641; min-height: 38px; }
+.article_body .code_block pre { margin: 0; border: 0; border-radius: 0; background: #101319; padding: 20px; overflow: auto; tab-size: 2; white-space: pre; line-height: 1.65; }
+.article_body .code_block code { font-size: 14px; color: #e2e8f0; overflow-wrap: normal; }
+.code_block :global(.token.comment) { color: #a0adbf; }
+.code_block :global(.token.keyword), .code_block :global(.token.tag) { color: #c4a7ff; }
+.code_block :global(.token.string), .code_block :global(.token.attr-value) { color: #a5dfa2; }
+.code_block :global(.token.function), .code_block :global(.token.class-name) { color: #8fceff; }
+.code_block :global(.token.number), .code_block :global(.token.boolean) { color: #ffb98b; }
+.code_block :global(.token.operator), .code_block :global(.token.punctuation) { color: #d3dbe8; }
+.table_scroll { overflow-x: auto; margin: 24px 0; }
+.table_scroll table { border-collapse: collapse; width: 100%; font-size: 16px; }
+.table_scroll th, .table_scroll td { border: 1px solid #51483b; padding: 12px 16px; text-align: left; min-width: 130px; }
+.table_scroll th { background: #282219; color: #f3dec0; }
+.blog_filters { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 24px; }
+.blog_filters label { flex: 1; min-width: 180px; color: #ddd7ce; font-size: 14px; }
+.blog_filters input, .blog_filters select { display: block; width: 100%; margin-top: 8px; padding: 14px; border: 1px solid #51483b; border-radius: 6px; color: #f5eee3; background: #1c1915; font: inherit; }
+.pagination, .page_numbers { flex-wrap: wrap; gap: 8px; }
+@media (max-width: 600px) {
+  .blog_section { padding-left: 20px; padding-right: 20px; }
+  .blog_header { align-items: flex-start; gap: 12px; }
+  .article_body .code_block pre { padding: 14px; }
+  .article_body .code_block code { font-size: 13px; }
+  .contents { padding: 16px; }
+}

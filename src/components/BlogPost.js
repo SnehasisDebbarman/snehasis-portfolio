@@ -23,7 +23,7 @@ export default function BlogPost() {
         return response.text();
       })
       .then((markdown) => {
-        if (!controller.signal.aborted) setContent(markdown.replace(/^---[\s\S]*?---\s*/, ""));
+        if (!controller.signal.aborted) setContent(markdown.replace(/^---\r?\n[\s\S]*?\r?\n---(?:\r?\n|$)/, ""));
       })
       .catch((error) => {
         if (error.name !== "AbortError") setContentError(error.message);
@@ -66,10 +66,11 @@ export default function BlogPost() {
             <span className={scss.article_read}>{post.readTime}</span>
           </div>
           <h1 className={scss.article_title}>{post.title}</h1>
+          <p className={scss.article_intro}>{post.excerpt}</p>
         </header>
 
         <div className={scss.article_body}>
-          {contentError ? <p>{contentError}</p> : content ? <MarkdownContent markdown={content} /> : <p>Loading article…</p>}
+          {contentError ? <p>{contentError}</p> : content ? <MarkdownContent key={slug} markdown={content} /> : <p>Loading article…</p>}
         </div>
       </div>
     </article>
