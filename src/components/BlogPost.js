@@ -1,11 +1,36 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { posts } from "../data/posts";
+import { posts } from "../data/posts.generated";
+import MarkdownContent from "./MarkdownContent";
 import scss from "../styles/Blog.module.scss";
 
 export default function BlogPost() {
   const { slug } = useParams();
   const post = posts.find((p) => p.slug === slug);
+  const [content, setContent] = useState("");
+  const [contentError, setContentError] = useState("");
+
+  useEffect(() => {
+    if (!post) return undefined;
+
+    const controller = new AbortController();
+    setContent("");
+    setContentError("");
+
+    fetch(post.contentPath, { signal: controller.signal })
+      .then((response) => {
+        if (!response.ok) throw new Error("Article could not be loaded.");
+        return response.text();
+      })
+      .then((markdown) => {
+        if (!controller.signal.aborted) setContent(markdown.replace(/^---[\s\S]*?---\s*/, ""));
+      })
+      .catch((error) => {
+        if (error.name !== "AbortError") setContentError(error.message);
+      });
+
+    return () => controller.abort();
+  }, [post]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -43,10 +68,9 @@ export default function BlogPost() {
           <h1 className={scss.article_title}>{post.title}</h1>
         </header>
 
-        <div 
-          className={scss.article_body}
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
+        <div className={scss.article_body}>
+          {contentError ? <p>{contentError}</p> : content ? <MarkdownContent markdown={content} /> : <p>Loading article…</p>}
+        </div>
       </div>
     </article>
   );

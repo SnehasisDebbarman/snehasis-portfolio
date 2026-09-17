@@ -276,7 +276,17 @@
     margin-bottom: rem(16px);
   }
 
-  ul {
+  h2 {
+    font-family: var(--font-serif);
+    font-size: rem(28px);
+    font-weight: 400;
+    color: color(text);
+    margin-top: rem(52px);
+    margin-bottom: rem(18px);
+  }
+
+  ul,
+  ol {
     margin-bottom: rem(28px);
     padding-left: rem(20px);
     
@@ -287,6 +297,12 @@
         color: color(text);
       }
     }
+  }
+
+  a {
+    color: color(amber);
+    text-decoration: underline;
+    text-underline-offset: rem(3px);
   }
 
   code {

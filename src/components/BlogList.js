@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { posts } from "../data/posts";
+import { posts } from "../data/posts.generated";
 import scss from "../styles/Blog.module.scss";
 
 export default function BlogList() {

@@ -28,6 +28,9 @@
     "zustand": "^5.0.14"
   },
   "scripts": {
+    "prestart": "node scripts/generate-blog-index.js",
+    "prebuild": "node scripts/generate-blog-index.js",
+    "pretest": "node scripts/generate-blog-index.js",
     "postinstall": "sed -i '' \"s/'elkjs\\/lib\\/elk-api'/'elkjs\\/lib\\/elk-api.js'/g\" node_modules/reaflow/dist/*.js || true",
     "start": "react-app-rewired start",
     "build": "CI=false react-app-rewired build",
