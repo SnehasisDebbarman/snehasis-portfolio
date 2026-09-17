@@ -6,13 +6,14 @@ export const WORKER_SOURCE = `
   let settling = false;
   const defer = globalThis.setTimeout.bind(globalThis);
   const timers = new Set();
+  let pendingFetches = 0;
   const finish = () => {
-    if (!completed || timers.size || settling) return;
+    if (!completed || timers.size || pendingFetches || settling) return;
     settling = true;
-    // ponytail: 50ms idle grace for rejection events; await work without timers.
+    // ponytail: 50ms idle grace for callback microtasks; await work without timers.
     defer(() => {
       settling = false;
-      if (timers.size === 0) send({ type: "done" });
+      if (timers.size === 0 && pendingFetches === 0) send({ type: "done" });
     }, 50);
   };
   const format = (value) => {
@@ -39,6 +40,22 @@ export const WORKER_SOURCE = `
       if (count === 200) send({ type: "limit" });
     };
   });
+  const nativeFetch = typeof globalThis.fetch === "function" ? globalThis.fetch.bind(globalThis) : null;
+  if (nativeFetch) {
+    globalThis.fetch = (...args) => {
+      pendingFetches += 1;
+      try {
+        return nativeFetch(...args).finally(() => {
+          pendingFetches -= 1;
+          finish();
+        });
+      } catch (error) {
+        pendingFetches -= 1;
+        finish();
+        throw error;
+      }
+    };
+  }
   // Track browser timers so ordinary setTimeout examples can finish naturally.
   for (const name of ["setTimeout", "setInterval"]) {
     const native = globalThis[name].bind(globalThis);

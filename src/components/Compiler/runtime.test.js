@@ -4,7 +4,7 @@ import { WORKER_SOURCE, runJavaScript } from "./runtime";
 test("executes JavaScript, formats values, catches errors, and bounds execution", async () => {
   async function execute(code) {
     const messages = [];
-    const scope = { console: {}, postMessage: (data) => messages.push(data), setTimeout, setInterval, clearTimeout, clearInterval, addEventListener() {} };
+    const scope = { console: {}, postMessage: (data) => messages.push(data), setTimeout, setInterval, clearTimeout, clearInterval, addEventListener() {}, fetch: () => Promise.resolve({ json: () => Promise.resolve({ answer: 42 }) }) };
     const context = vm.createContext(scope);
     vm.runInContext(WORKER_SOURCE, context);
     await scope.onmessage({ data: code });
@@ -18,6 +18,9 @@ test("executes JavaScript, formats values, catches errors, and bounds execution"
   expect(result.some((row) => row.level === "warn")).toBe(true);
   expect(result[result.length - 2].text).toBe("later");
   expect(result[result.length - 1].type).toBe("done");
+  const callbackResult = await execute('fetch("mock").then((response) => response.json()).then((data) => console.log("callback", data.answer));');
+  expect(callbackResult.some((row) => row.text === "callback 42")).toBe(true);
+  expect(callbackResult.at(-1).type).toBe("done");
   expect((await execute('throw new Error("broken")'))[0].text).toBe("Error: broken");
   expect((await execute('const ='))[0].text).toContain("SyntaxError");
   const flood = await execute('for(let i=0;i<1000;i++) console.log(i)');
