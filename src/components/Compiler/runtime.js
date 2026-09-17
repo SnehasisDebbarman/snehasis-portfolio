@@ -114,8 +114,8 @@ export function runJavaScript(code, onOutput, onFinish) {
   const timeout = setTimeout(() => finish("Timed out", "Execution stopped after 5 seconds."), 5000);
   window.addEventListener("message", receive);
   // An opaque-origin frame keeps code away from the portfolio's storage.
-  // Its CSP also applies to the blob worker and blocks network requests.
-  frame.srcdoc = `<!doctype html><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' blob:; worker-src blob:; connect-src 'none'"><script>
+  // Fetch remains subject to the browser's normal CORS rules and has no cookies.
+  frame.srcdoc = `<!doctype html><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' blob:; worker-src blob:; connect-src https: http: data:"><script>
     let worker;
     const send = data => parent.postMessage(data, '*');
     addEventListener('message', event => {

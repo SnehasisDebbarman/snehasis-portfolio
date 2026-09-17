@@ -74,7 +74,7 @@ export default function Compiler() {
           <div className={css.status} role="status">{status}</div>
         </section>
       </div>
-      <footer className={css.footer}>Browser JavaScript · 5-second limit · No DOM, Node.js, or network access</footer>
+      <footer className={css.footer}>Browser JavaScript · 5-second limit · Fetch follows CORS · No cookies or Node.js</footer>
     </section>
   );
 }

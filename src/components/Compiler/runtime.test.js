@@ -30,7 +30,7 @@ test("executes JavaScript, formats values, catches errors, and bounds execution"
   const stop = runJavaScript('while(true) {}', output, finish);
   const frame = document.querySelector("iframe");
   expect(frame.getAttribute("sandbox")).toBe("allow-scripts");
-  expect(frame.srcdoc).toContain("connect-src 'none'");
+  expect(frame.srcdoc).toContain("connect-src https: http: data:");
   window.dispatchEvent(new MessageEvent("message", { source: window, data: { type: "done" } }));
   expect(finish).not.toHaveBeenCalled();
   jest.advanceTimersByTime(5000);
