@@ -15,6 +15,7 @@ import BlogList from "./components/BlogList";
 import BlogPost from "./components/BlogPost";
 import Recommendations from "./components/Recommendations";
 import JsonTree from "./components/JsonTree";
+import Compiler from "./components/Compiler";
 
 function MainPortfolio() {
   return (
@@ -50,25 +51,26 @@ function HashScrollHandler() {
 
 function AppContent() {
   const location = useLocation();
-  const isJsonTree = location.pathname === "/json-tree";
+  const isTool = /^\/(json-tree|compiler)\/?$/.test(location.pathname);
 
   return (
     <>
       <HashScrollHandler />
-      {!isJsonTree && <CustomCursor />}
-      {!isJsonTree && <FluidBackground />}
-      <div style={isJsonTree ? { position: "relative", zIndex: 1, height: "100vh", overflow: "hidden" } : { position: "relative", zIndex: 1 }}>
-        {!isJsonTree && <Header />}
-        <main style={isJsonTree ? { height: "100%", display: "block", padding: 0 } : { paddingBottom: "44px" }}>
+      {!isTool && <CustomCursor />}
+      {!isTool && <FluidBackground />}
+      <div style={isTool ? { position: "relative", zIndex: 1, height: "100vh", overflow: "auto" } : { position: "relative", zIndex: 1 }}>
+        {!isTool && <Header />}
+        <main style={isTool ? { height: "100%", display: "block", padding: 0 } : { paddingBottom: "44px" }}>
           <Routes>
             <Route path="/" element={<MainPortfolio />} />
             <Route path="/blog" element={<BlogList />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/json-tree" element={<JsonTree />} />
+            <Route path="/compiler" element={<Compiler />} />
           </Routes>
         </main>
-        {!isJsonTree && <Footer />}
-        {!isJsonTree && <StatusBar />}
+        {!isTool && <Footer />}
+        {!isTool && <StatusBar />}
       </div>
     </>
   );
