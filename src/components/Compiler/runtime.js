@@ -1,7 +1,7 @@
 // Keep worker code as source so the app bundler cannot inject external helpers.
 export const WORKER_SOURCE = `
   const send = globalThis.postMessage.bind(globalThis);
-  let count = 0;
+
   let completed = false;
   let settling = false;
   const defer = globalThis.setTimeout.bind(globalThis);
@@ -35,9 +35,7 @@ export const WORKER_SOURCE = `
   };
   ["log", "info", "warn", "error", "debug", "table"].forEach((level) => {
     globalThis.console[level] = (...args) => {
-      if (++count > 200) return;
       send({ type: "output", level, text: args.map(format).join(" ").slice(0, 8000) });
-      if (count === 200) send({ type: "limit" });
     };
   });
   const nativeFetch = typeof globalThis.fetch === "function" ? globalThis.fetch.bind(globalThis) : null;
@@ -98,10 +96,8 @@ export function runJavaScript(code, onOutput, onFinish) {
   frame.setAttribute("sandbox", "allow-scripts");
   let stopped = false;
   let started = false;
-  let count = 0;
   const stop = () => {
     stopped = true;
-    clearTimeout(timeout);
     window.removeEventListener("message", receive);
     frame.contentWindow?.postMessage({ type: "stop" }, "*");
     frame.remove();
@@ -117,18 +113,14 @@ export function runJavaScript(code, onOutput, onFinish) {
     if (data.type === "ready" && !started) {
       started = true;
       frame.contentWindow.postMessage({ type: "run", code }, "*");
-    } else if (data.type === "output" && typeof data.text === "string" && count++ < 200) {
+    } else if (data.type === "output" && typeof data.text === "string") {
       onOutput({ level: ["warn", "error"].includes(data.level) ? data.level : "log", text: data.text.slice(0, 8000) });
-      if (count === 200) finish("Output limit", "Stopped after 200 console messages.");
     } else if (data.type === "done") {
       finish("Completed");
     } else if (data.type === "error") {
       finish("Error", typeof data.text === "string" ? data.text.slice(0, 8000) : "Execution failed.");
-    } else if (data.type === "limit") {
-      finish("Output limit", "Stopped after 200 console messages.");
     }
   };
-  const timeout = setTimeout(() => finish("Timed out", "Execution stopped after 5 seconds."), 5000);
   window.addEventListener("message", receive);
   // An opaque-origin frame keeps code away from the portfolio's storage.
   // Fetch remains subject to the browser's normal CORS rules and has no cookies.
