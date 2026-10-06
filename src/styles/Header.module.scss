@@ -69,6 +69,7 @@
     right: 0;
     width: rem(280px);
     height: 100vh;
+    overflow-y: auto;
     background: rgba(color(bg-2), 0.98);
     backdrop-filter: blur(16px);
     border-left: 1px solid color(border-warm);
@@ -77,11 +78,13 @@
     gap: rem(24px);
     z-index: 105;
     transform: translateX(100%);
+    visibility: hidden;
     transition: transform 0.4s var(--ease-out-expo);
     box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
 
     &.menu_open {
       transform: translateX(0);
+      visibility: visible;
     }
   }
 
@@ -89,6 +92,27 @@
     gap: rem(24px);
   }
 }
+
+.tools { position: relative; }
+.tools_toggle {
+  display: flex; align-items: center; gap: 6px;
+  background: transparent; border: 0; cursor: none;
+  svg { transition: transform 0.2s ease; }
+}
+.chevron_open { transform: rotate(180deg); }
+.tools_dropdown {
+  position: absolute; top: calc(100% + 16px); right: 0;
+  width: 270px; padding: 8px; margin: 0; list-style: none;
+  border: 1px solid color(border-warm); border-radius: 8px;
+  background: color(bg-2); box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  a { display: block; padding: 12px 14px; border-radius: 5px; font: 13px var(--font-body); color: color(text); line-height: 1.5; }
+  a:hover, a:focus-visible { background: color(amber-dim); color: color(amber); }
+  @media (max-width: 1099px) {
+    position: static; width: 100%; margin-top: 12px; box-shadow: none;
+    a { padding: 12px 10px; }
+  }
+}
+.header :focus-visible { outline: 2px solid color(amber); outline-offset: 4px; }
 
 .nav_link {
   font-family: var(--font-mono);

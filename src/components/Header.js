@@ -1,15 +1,51 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import scss from "../styles/Header.module.scss";
 import { Link as ScrollLink } from "react-scroll";
 import { Link, useLocation } from "react-router-dom";
-import { FiMenu, FiX } from "react-icons/fi";
+import { FiChevronDown, FiMenu, FiX } from "react-icons/fi";
+
+const tools = [
+  { label: "JSON Tree Viewer", path: "/json-tree" },
+  { label: "JavaScript Compiler", path: "/compiler" },
+  { label: "Markdown Editor & Viewer", path: "/markdown" },
+];
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);
+  const toolsContainer = useRef();
+  const toolsButton = useRef();
   const location = useLocation();
   const isHome = location.pathname === "/";
 
-  const closeMenu = () => setMenuOpen(false);
+  const closeMenu = () => {
+    setMenuOpen(false);
+    setToolsOpen(false);
+  };
+
+  useEffect(() => {
+    setMenuOpen(false);
+    setToolsOpen(false);
+  }, [location.pathname, location.hash]);
+
+  useEffect(() => {
+    if (!toolsOpen) return;
+    const outside = event => {
+      if (!toolsContainer.current?.contains(event.target)) setToolsOpen(false);
+    };
+    const escape = event => {
+      if (event.key === "Escape") {
+        setToolsOpen(false);
+        toolsButton.current?.focus();
+      }
+    };
+    document.addEventListener("pointerdown", outside);
+    document.addEventListener("keydown", escape);
+    return () => {
+      document.removeEventListener("pointerdown", outside);
+      document.removeEventListener("keydown", escape);
+    };
+  }, [toolsOpen]);
 
   return (
     <header className={scss.header}>
@@ -34,15 +70,16 @@ export default function Header() {
 
       <button
         className={scss.menu_toggle}
-        onClick={() => setMenuOpen(!menuOpen)}
+        onClick={() => { setMenuOpen(!menuOpen); setToolsOpen(false); }}
         aria-label="Toggle menu"
+        aria-expanded={menuOpen}
+        aria-controls="portfolio-navigation"
         style={{ cursor: "none" }}
       >
         {menuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
       </button>
 
-      <nav className={`${scss.navigation} ${menuOpen ? scss.menu_open : ""}`}>
-        <Link to="/markdown" style={{ cursor: "none" }} className={scss.nav_link} onClick={closeMenu}>MARKDOWN</Link>
+      <nav id="portfolio-navigation" aria-label="Main navigation" className={`${scss.navigation} ${menuOpen ? scss.menu_open : ""}`}>
         {isHome ? (
           <>
             <ScrollLink to="about" smooth={true} duration={500} style={{ cursor: "none" }} className={scss.nav_link} onClick={closeMenu}>ABOUT</ScrollLink>
@@ -62,6 +99,19 @@ export default function Header() {
             <Link to="/#contact" style={{ cursor: "none" }} className={scss.nav_link} onClick={closeMenu}>CONTACT</Link>
           </>
         )}
+        <div className={scss.tools} ref={toolsContainer} onBlur={event => {
+          if (!event.currentTarget.contains(event.relatedTarget)) setToolsOpen(false);
+        }}>
+          <button type="button" ref={toolsButton} className={`${scss.nav_link} ${scss.tools_toggle}`}
+            aria-expanded={toolsOpen} aria-controls="portfolio-tools" onClick={() => setToolsOpen(!toolsOpen)}>
+            TOOLS <FiChevronDown aria-hidden="true" className={toolsOpen ? scss.chevron_open : ""} />
+          </button>
+          <ul id="portfolio-tools" className={scss.tools_dropdown} hidden={!toolsOpen}>
+            {tools.map(tool => <li key={tool.path}>
+              <Link to={tool.path} onClick={closeMenu}>{tool.label}</Link>
+            </li>)}
+          </ul>
+        </div>
       </nav>
     </header>
   );
