@@ -42,6 +42,7 @@ export default function Header() {
       </button>
 
       <nav className={`${scss.navigation} ${menuOpen ? scss.menu_open : ""}`}>
+        <Link to="/markdown" style={{ cursor: "none" }} className={scss.nav_link} onClick={closeMenu}>MARKDOWN</Link>
         {isHome ? (
           <>
             <ScrollLink to="about" smooth={true} duration={500} style={{ cursor: "none" }} className={scss.nav_link} onClick={closeMenu}>ABOUT</ScrollLink>

@@ -1,3 +1,9 @@
 {
-  "rewrites": [{ "source": "/compiler/:path*", "destination": "/index.html" }]
+  "rewrites": [
+    { "source": "/compiler/:path*", "destination": "/index.html" },
+    { "source": "/markdown", "destination": "/index.html" },
+    { "source": "/markdown/", "destination": "/index.html" },
+    { "source": "/md-viewer", "destination": "/index.html" },
+    { "source": "/md-viewer/", "destination": "/index.html" }
+  ]
 }

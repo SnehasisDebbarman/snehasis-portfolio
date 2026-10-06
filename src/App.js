@@ -16,6 +16,7 @@ import BlogPost from "./components/BlogPost";
 import Recommendations from "./components/Recommendations";
 import JsonTree from "./components/JsonTree";
 import Compiler from "./components/Compiler";
+import MarkdownEditor from "./components/MarkdownEditor";
 
 function MainPortfolio() {
   return (
@@ -51,7 +52,7 @@ function HashScrollHandler() {
 
 function AppContent() {
   const location = useLocation();
-  const isTool = /^\/(json-tree|compiler)\/?$/.test(location.pathname);
+  const isTool = /^\/(json-tree|compiler|markdown|md-viewer)\/?$/.test(location.pathname);
 
   return (
     <>
@@ -67,6 +68,8 @@ function AppContent() {
             <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/json-tree" element={<JsonTree />} />
             <Route path="/compiler" element={<Compiler />} />
+            <Route path="/markdown" element={<MarkdownEditor />} />
+            <Route path="/md-viewer" element={<MarkdownEditor />} />
           </Routes>
         </main>
         {!isTool && <Footer />}
