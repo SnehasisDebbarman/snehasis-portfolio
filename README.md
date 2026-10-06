@@ -1,5 +1,11 @@
 # Frontend Mentor - Single-page developer portfolio solution
 
+## Markdown workspace
+
+Open `/markdown` or `/md-viewer` for the Markdown viewer and editor. Both routes share a browser-local draft. Includes live split preview, dedicated editor/preview views, GitHub-flavored tables and checklists, highlighted code, file import (.md/.markdown/.txt, up to 1 MB), clipboard copy, and Markdown download. Raw HTML is disabled. Imported files stay on the device; image URLs in Markdown may request external resources.
+
+Run `node scripts/check-markdown-editor.cjs` to verify editing, persistence, import, download, clipboard, safe rendering, and both route configurations. The existing renderer checks are `node scripts/check-blog-reader.cjs`.
+
 This is a solution to the [Single-page developer portfolio challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/singlepage-developer-portfolio-bBVj2ZPi-x). Frontend Mentor challenges help you improve your coding skills by building realistic projects.
 
 ## Table of contents
